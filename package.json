@@ -10,11 +10,13 @@
     "preview": "vite preview",
     "prepare": "husky",
     "format": "prettier ./src --write .",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "e2e": "cypress run"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cypress": "13.8.0",
     "lucide-react": "^0.372.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
