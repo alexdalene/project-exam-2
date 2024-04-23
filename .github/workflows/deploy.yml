@@ -24,8 +24,8 @@ jobs:
 
       - name: Build
         run: |
-          bun build
+          bun run build
 
       - name: Lint
         run: |
-          bun lint-staged
+          bun run lint-staged
