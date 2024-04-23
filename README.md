@@ -1,3 +1,5 @@
+[![Build and Deploy](https://github.com/alexdalene/project-exam-2/actions/workflows/deploy.yml/badge.svg)](https://github.com/alexdalene/project-exam-2/actions/workflows/deploy.yml)
+
 # Project Exam 2
 
 Take the skills learned over the last two years and take on an extensive project where the finished product should reflect the candidate’s general development capabilities, in addition to visual and technical skills.
