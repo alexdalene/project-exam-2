@@ -11,7 +11,7 @@
     "prepare": "husky",
     "format": "prettier ./src --write .",
     "lint-staged": "lint-staged",
-    "e2e": "cypress run"
+    "test:e2e": "cypress run"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",

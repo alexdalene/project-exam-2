@@ -29,3 +29,7 @@ jobs:
       - name: Lint
         run: |
           bun run lint-staged
+
+      - name: E2E
+        run: |
+          bun run test:e2e
