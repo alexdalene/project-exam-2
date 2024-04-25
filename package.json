@@ -9,7 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepare": "husky",
-    "format": "prettier ./src --write .",
+    "format": "prettier --write .",
     "lint-staged": "lint-staged",
     "test:e2e": "cypress run"
   },
