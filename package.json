@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:start": "vite && wait-on http://localhost:5173",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -13,7 +12,7 @@
     "format": "prettier --write .",
     "lint-staged": "lint-staged",
     "test:e2e": "cypress run",
-    "test:start": "vite && wait-on http://localhost:5173 test:e2e"
+    "test:start": "start-server-and-test dev http://localhost:5173 test:e2e"
   },
   "dependencies": {
     "@types/jest": "^29.5.12",
@@ -27,6 +26,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.3",
     "react-router-dom": "^6.23.0",
+    "start-server-and-test": "^2.0.3",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.5.2"
