@@ -1,8 +1,7 @@
 const App = () => {
   return (
     <div>
-      <h1 className='font-bold text-2xl'>Hello, world!</h1>
-      <p>Testing CI/CD</p>
+      <h1>Home</h1>
     </div>
   );
 };
