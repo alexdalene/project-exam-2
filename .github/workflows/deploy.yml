@@ -26,6 +26,10 @@ jobs:
         run: |
           bun run lint-staged
 
+      - name: Dev
+        run: |
+          bun run dev
+
       - name: E2E
         run: |
           bun run test:e2e
