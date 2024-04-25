@@ -22,14 +22,10 @@ jobs:
         run: |
           bun install
 
-      - name: Build
-        run: |
-          bun run build
-
       - name: Lint
         run: |
           bun run lint-staged
 
       - name: E2E
         run: |
-          bun run test:e2e
+          bun run test:start
