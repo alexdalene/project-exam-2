@@ -11,7 +11,7 @@
     "prepare": "husky",
     "format": "prettier --write .",
     "lint-staged": "lint-staged",
-    "test:e2e": "cypress run"
+    "test:e2e": "start-server-and-test start http://localhost:5173 cypress run"
   },
   "dependencies": {
     "@types/jest": "^29.5.12",
@@ -25,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.3",
     "react-router-dom": "^6.23.0",
+    "start-server-and-test": "^2.0.3",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.5.2"
