@@ -11,7 +11,8 @@
     "prepare": "husky",
     "format": "prettier --write .",
     "lint-staged": "lint-staged",
-    "test:e2e": "start-test 5173 cypress run"
+    "test:e2e": "cypress run",
+    "test:start": "start-server-and-test dev http://localhost:3000 test:e2e"
   },
   "dependencies": {
     "@types/jest": "^29.5.12",
