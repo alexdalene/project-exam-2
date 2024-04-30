@@ -1,8 +1,10 @@
+import Hero from '@/components/hero-section';
+
 const App = () => {
   return (
-    <div>
-      <h2>Home</h2>
-    </div>
+    <>
+      <Hero />
+    </>
   );
 };
 
