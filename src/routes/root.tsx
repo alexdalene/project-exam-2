@@ -1,15 +1,16 @@
 import { Outlet } from 'react-router-dom';
+import EarthContainer from '@/components/earth/earth-container';
 
 const Root = () => {
   return (
-    <div>
-      <h1 className="font text-2xl font-bold text-primary">
-        Hello, world!
-      </h1>
-      <div>
-        <Outlet />
+    <>
+      <div className="fixed left-0 top-0 z-0 h-full w-full overflow-hidden">
+        <EarthContainer />
       </div>
-    </div>
+      <main className="z-10">
+        <Outlet />
+      </main>
+    </>
   );
 };
 

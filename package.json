@@ -15,7 +15,10 @@
     "test:start": "start-server-and-test dev http://localhost:5173 test:e2e"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
+    "@react-three/fiber": "8.15",
     "@types/jest": "^29.5.12",
+    "@types/three": "^0.164.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cypress": "13.8.0",
@@ -29,6 +32,7 @@
     "start-server-and-test": "^2.0.3",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "three": "0.158",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
