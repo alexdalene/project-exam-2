@@ -3,7 +3,7 @@ describe('visit homepage', () => {
     cy.visit('/');
     cy.get('h1').should(
       'text',
-      "Let's help you find / create the perfect venue.",
+      "We'll help you find / create the perfect venue.",
     );
   });
 });

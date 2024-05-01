@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import EarthContainer from '@/components/earth/earth-container';
+import Loading from '@/components/loading';
 
 const Root = () => {
   return (
@@ -8,6 +9,7 @@ const Root = () => {
         <EarthContainer />
       </div>
       <main className="z-10">
+        <Loading />
         <Outlet />
       </main>
     </>
