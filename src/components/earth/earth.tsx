@@ -157,7 +157,7 @@ const Earth = () => {
 
   gui.add({ reset: () => gui.reset() }, 'reset');
 
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     earthRef.current.rotation.y += delta * 0.01;
     earthRef.current.rotation.x += delta * 0.01;
   });
