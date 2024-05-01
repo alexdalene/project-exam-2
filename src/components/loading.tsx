@@ -17,13 +17,12 @@ const Loading = () => {
       if (progress === 100) {
         tl.to('#progress', {
           width: `${progress}%`,
-          duration: 2,
+          duration: 1,
           ease: 'power2.inOut',
         }).to(containerRef.current, {
           translateY: '-100%',
           duration: 1,
           ease: 'power2.inOut',
-          delay: 0.2,
           onComplete: () => {
             containerRef.current.style.display = 'none';
           },
@@ -48,6 +47,9 @@ const Loading = () => {
             className="absolute bottom-0 left-0 top-0 h-2 bg-foreground"
           ></div>
         </div>
+        {(progress !== 100 && (
+          <span className="text-lg">Hold on...</span>
+        )) || <span className="text-lg">Done.</span>}
       </div>
     </div>
   );

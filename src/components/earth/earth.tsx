@@ -51,9 +51,9 @@ const Earth = () => {
     () => {
       if (progress === 100) {
         gsap.from(sunSpherical, {
-          delay: 2.6,
+          delay: 1.2,
           phi: 1.3,
-          duration: 2,
+          duration: 1.5,
           ease: 'power2.inOut',
           onUpdate: updateSun,
         });
