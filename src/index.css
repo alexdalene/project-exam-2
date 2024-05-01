@@ -6,6 +6,8 @@
   @font-face {
     font-family: 'Inter';
     src: url('@/assets/fonts/Inter.ttf') format('truetype');
+    font-weight: 400 700;
+    font-style: normal;
   }
 }
 
@@ -78,7 +80,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground subpixel-antialiased;
+    @apply bg-background text-foreground antialiased;
   }
   .btn-hover-slide-right {
     @apply relative overflow-hidden before:absolute before:bottom-0 before:left-0 before:top-0 before:h-full before:w-0 before:bg-muted-foreground before:transition-all hover:before:w-full;
