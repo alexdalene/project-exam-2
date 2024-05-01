@@ -67,9 +67,9 @@ const Earth = () => {
    */
   const [dayTexture, nightTexture, specularCloudsTexture] =
     useTexture([
-      'src/assets/earth/textures/day.jpg',
-      'src/assets/earth/textures/night.jpg',
-      'src/assets/earth/textures/specularClouds.jpg',
+      '/textures/day.jpg',
+      '/textures/night.jpg',
+      '/textures/specularClouds.jpg',
     ]);
 
   dayTexture.anisotropy = 8;
