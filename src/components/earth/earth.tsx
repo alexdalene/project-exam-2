@@ -1,7 +1,4 @@
-import {
-  useTexture,
-  OrbitControls,
-} from '@react-three/drei';
+import { useTexture } from '@react-three/drei';
 import { Mesh } from 'three';
 import * as THREE from 'three';
 import { useRef, useEffect } from 'react';
@@ -66,8 +63,8 @@ const Earth = () => {
    */
   const sunSpherical = new THREE.Spherical(
     1,
-    0.439822971502571,
-    2.88398205599543,
+    0.515221195188726,
+    -2.65150419962979,
   );
   const sunDirection = new THREE.Vector3();
 
@@ -137,6 +134,7 @@ const Earth = () => {
 
   useFrame((state, delta) => {
     earthRef.current.rotation.y += delta * 0.01;
+    earthRef.current.rotation.x += delta * 0.01;
   });
 
   return (
@@ -168,7 +166,6 @@ const Earth = () => {
               ),
             }}
           />
-          <OrbitControls />
         </mesh>
 
         <mesh

@@ -17,7 +17,7 @@ const Hero = () => {
           size="lg"
           className="btn-hover-slide-left group"
         >
-          <span className="z-10 transition group-hover:text-background">
+          <span className="z-10 transition group-hover:text-foreground">
             Create a venue
           </span>
         </Button>
@@ -26,7 +26,7 @@ const Hero = () => {
           size="lg"
           className="btn-hover-slide-right group"
         >
-          <span className="z-10 transition group-hover:text-background">
+          <span className="z-10 transition group-hover:text-foreground">
             Find venues
           </span>
         </Button>

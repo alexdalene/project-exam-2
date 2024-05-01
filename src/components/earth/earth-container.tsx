@@ -3,7 +3,7 @@ import Earth from '@/components/earth/earth';
 
 const EarthContainer = () => {
   return (
-    <Canvas camera={{ fov: 45 }}>
+    <Canvas camera={{ fov: 45, position: [0, 0, 4] }}>
       <Earth />
     </Canvas>
   );
