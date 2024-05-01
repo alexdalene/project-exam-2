@@ -4,20 +4,29 @@ import { ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
+import { useProgress } from '@react-three/drei';
+
 import { useRef } from 'react';
 
 const Hero = () => {
   gsap.registerPlugin(useGSAP);
 
   const sectionRef = useRef(null!);
+  const { progress } = useProgress();
 
-  useGSAP(() => {
-    gsap.from('h1', {
-      opacity: 0,
-      y: 100,
-      duration: 1,
-    });
-  });
+  useGSAP(
+    () => {
+      if (progress === 100) {
+        gsap.from('h1', {
+          delay: 2.8,
+          opacity: 0,
+          y: 100,
+          duration: 1,
+        });
+      }
+    },
+    { scope: sectionRef, dependencies: [progress] },
+  );
 
   return (
     <section

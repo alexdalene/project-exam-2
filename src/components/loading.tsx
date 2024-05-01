@@ -14,19 +14,21 @@ const Loading = () => {
 
   useGSAP(
     () => {
-      tl.to('#progress', {
-        width: `${progress}%`,
-        duration: 2,
-        ease: 'power2.inOut',
-      }).to(containerRef.current, {
-        translateY: '-100%',
-        duration: 1,
-        ease: 'power2.inOut',
-        delay: 0.2,
-        onComplete: () => {
-          containerRef.current.style.display = 'none';
-        },
-      });
+      if (progress === 100) {
+        tl.to('#progress', {
+          width: `${progress}%`,
+          duration: 2,
+          ease: 'power2.inOut',
+        }).to(containerRef.current, {
+          translateY: '-100%',
+          duration: 1,
+          ease: 'power2.inOut',
+          delay: 0.2,
+          onComplete: () => {
+            containerRef.current.style.display = 'none';
+          },
+        });
+      }
     },
     { scope: containerRef, dependencies: [progress] },
   );

@@ -1,9 +1,12 @@
-import { useTexture } from '@react-three/drei';
-import { Mesh } from 'three';
 import * as THREE from 'three';
-import { useRef, useEffect } from 'react';
-import GUI from 'lil-gui';
+import { Mesh } from 'three';
+import { useTexture, useProgress } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import GUI from 'lil-gui';
+
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 // Earth shaders
 import earthVertexShader from '@/assets/earth/shaders/vertex.glsl';
@@ -17,14 +20,12 @@ const Earth = () => {
   /**
    * Refs
    */
-  const sunRef = useRef<Mesh>(null!);
   const earthRef = useRef<Mesh>(null!);
   const atmosphereRef = useRef<Mesh>(null!);
+  const groupRef = useRef<THREE.Group>(null!);
 
   useEffect(() => {
-    if (sunRef.current) {
-      updateSun();
-    }
+    updateSun();
   });
 
   /**
@@ -40,6 +41,26 @@ const Earth = () => {
   if (hash === '#debug') {
     gui.show();
   }
+
+  /**
+   * GSAP
+   */
+  const { progress } = useProgress();
+
+  useGSAP(
+    () => {
+      if (progress === 100) {
+        gsap.from(sunSpherical, {
+          delay: 2.6,
+          phi: 1.3,
+          duration: 2,
+          ease: 'power2.inOut',
+          onUpdate: updateSun,
+        });
+      }
+    },
+    { dependencies: [progress] },
+  );
 
   /**
    * Textures
@@ -81,11 +102,6 @@ const Earth = () => {
   const updateSun = () => {
     // Sun direction
     sunDirection.setFromSpherical(sunSpherical);
-
-    // Debug
-    sunRef.current.position
-      .copy(sunDirection)
-      .multiplyScalar(5);
 
     // Uniforms
     (
@@ -148,7 +164,7 @@ const Earth = () => {
 
   return (
     <>
-      <group position={[-0.5, -1.5, 0]}>
+      <group position={[-0.5, -1.5, 0]} ref={groupRef}>
         <mesh ref={earthRef}>
           <sphereGeometry args={[2, 64, 64]} />
           <shaderMaterial
@@ -205,11 +221,6 @@ const Earth = () => {
           />
         </mesh>
       </group>
-
-      <mesh ref={sunRef}>
-        <icosahedronGeometry args={[0.1, 2]} />
-        <meshBasicMaterial />
-      </mesh>
     </>
   );
 };
