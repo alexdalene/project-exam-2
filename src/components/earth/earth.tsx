@@ -25,12 +25,21 @@ const Earth = () => {
     if (sunRef.current) {
       updateSun();
     }
-  }, [sunRef.current]);
+  });
 
   /**
    * GUI
    */
   const gui = new GUI();
+  gui.hide();
+
+  // Get hash
+  const hash = window.location.hash;
+
+  // Show GUI if hash is debug
+  if (hash === '#debug') {
+    gui.show();
+  }
 
   /**
    * Textures
