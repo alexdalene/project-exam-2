@@ -81,9 +81,9 @@
     @apply bg-background text-foreground subpixel-antialiased;
   }
   .btn-hover-slide-right {
-    @apply relative overflow-hidden before:absolute before:bottom-0 before:left-0 before:top-0 before:h-full before:w-0 before:bg-foreground before:transition-all hover:before:w-full;
+    @apply relative overflow-hidden before:absolute before:bottom-0 before:left-0 before:top-0 before:h-full before:w-0 before:bg-muted-foreground before:transition-all hover:before:w-full;
   }
   .btn-hover-slide-left {
-    @apply relative overflow-hidden before:absolute before:bottom-0 before:right-0 before:top-0 before:h-full before:w-0 before:bg-foreground before:transition-all hover:before:w-full;
+    @apply relative overflow-hidden before:absolute before:bottom-0 before:right-0 before:top-0 before:h-full before:w-0 before:bg-muted-foreground before:transition-all hover:before:w-full;
   }
 }

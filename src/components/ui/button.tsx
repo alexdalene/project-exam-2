@@ -24,9 +24,9 @@ const buttonVariants = cva(
           'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         primary:
-          'w-fit content-end self-end bg-muted-foreground text-lg font-normal',
+          'w-fit content-end self-end bg-transparent text-lg font-normal border border-muted-foreground text-background',
         primaryOutline:
-          'w-fit content-end self-end border border-muted-foreground bg-transparent text-lg font-normal',
+          'w-fit content-end self-end border border-muted-foreground bg-transparent text-lg font-normal text-background',
       },
       size: {
         default: 'h-10 px-4 py-2',
