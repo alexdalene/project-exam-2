@@ -19,8 +19,9 @@ const useAnimationStore = create<AnimationStore>((set) => ({
   isFinished: false,
   toggleAnimation: () =>
     set((state) => ({ isAnimating: !state.isAnimating })),
-  toggleFinished: () =>
-    set((state) => ({ isFinished: !state.isFinished })),
+  toggleFinished: () => {
+    set((state) => ({ isFinished: !state.isFinished }));
+  },
 }));
 
 export { useAnimationStore };

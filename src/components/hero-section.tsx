@@ -16,18 +16,19 @@ const Hero = () => {
   const sectionRef = useRef(null!);
   const { progress } = useProgress();
 
+  /**
+   * Store
+   */
   const toggleAnimation = useAnimationStore(
     (state) => state.toggleAnimation,
   );
-
-  const isAnimating = useAnimationStore(
-    (state) => state.isAnimating,
-  );
-
   const toggleFinished = useAnimationStore(
     (state) => state.toggleFinished,
   );
 
+  /**
+   * Animation
+   */
   useGSAP(
     () => {
       if (progress === 100) {
@@ -52,10 +53,6 @@ const Hero = () => {
     });
   });
 
-  if (isAnimating) {
-    hideHero();
-  }
-
   return (
     <section
       className="flex min-h-[100dvh] w-full flex-col justify-between px-4 py-16"
@@ -71,7 +68,10 @@ const Hero = () => {
         variant="primary"
         size="lg"
         className="btn-hover-slide-right group"
-        onClick={toggleAnimation}
+        onClick={() => {
+          toggleAnimation();
+          hideHero();
+        }}
       >
         <span className="z-10 transition group-hover:text-foreground">
           <ArrowRight />
