@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 /**
- * Animation store
+ * Represents the animation store.
  */
 type AnimationStore = {
   isAnimating: boolean;
@@ -10,6 +10,10 @@ type AnimationStore = {
   toggleFinished: () => void;
 };
 
+/**
+ * Custom hook for managing animation state.
+ * @returns The animation store object.
+ */
 const useAnimationStore = create<AnimationStore>((set) => ({
   isAnimating: false,
   isFinished: false,

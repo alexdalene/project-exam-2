@@ -1,7 +1,8 @@
-import { Outlet } from 'react-router-dom';
 import EarthContainer from '@/components/earth/earth-container';
 import Loading from '@/components/loading';
 import { useLoadingStore } from '@/store/loading';
+
+import { Outlet } from 'react-router-dom';
 
 const Root = () => {
   const isLoading = useLoadingStore(
