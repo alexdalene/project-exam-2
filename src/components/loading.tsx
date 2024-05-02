@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useRef } from 'react';
 import { useProgress } from '@react-three/drei';
+import { useLoadingStore } from '@/store/loading';
 
 const Loading = () => {
   gsap.registerPlugin(useGSAP);
@@ -9,6 +10,10 @@ const Loading = () => {
   const containerRef = useRef<HTMLDivElement>(null!);
 
   const { progress } = useProgress();
+
+  const toggleLoading = useLoadingStore(
+    (state) => state.toggleLoading,
+  );
 
   const tl = gsap.timeline();
 
@@ -23,9 +28,8 @@ const Loading = () => {
           translateY: '-100%',
           duration: 1,
           ease: 'power2.inOut',
-          onComplete: () => {
-            containerRef.current.style.display = 'none';
-          },
+          display: 'none',
+          onComplete: toggleLoading,
         });
       }
     },

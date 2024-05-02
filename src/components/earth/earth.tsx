@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { Mesh } from 'three';
 import { useTexture, useProgress } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import GUI from 'lil-gui';
+import { useFrame, useThree } from '@react-three/fiber';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useMemo, useCallback } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { useAnimationStore } from '@/store/animation';
 
 // Earth shaders
 import earthVertexShader from '@/assets/earth/shaders/vertex.glsl';
@@ -17,30 +17,9 @@ import atmosphereVertexShader from '@/assets/atmosphere/shaders/vertex.glsl';
 import atmosphereFragmentShader from '@/assets/atmosphere/shaders/fragment.glsl';
 
 const Earth = () => {
-  /**
-   * Refs
-   */
   const earthRef = useRef<Mesh>(null!);
   const atmosphereRef = useRef<Mesh>(null!);
   const groupRef = useRef<THREE.Group>(null!);
-
-  useEffect(() => {
-    updateSun();
-  });
-
-  /**
-   * GUI
-   */
-  const gui = new GUI();
-  gui.hide();
-
-  // Get hash
-  const hash = window.location.hash;
-
-  // Show GUI if hash is debug
-  if (hash === '#debug') {
-    gui.show();
-  }
 
   /**
    * GSAP
@@ -91,15 +70,22 @@ const Earth = () => {
   /**
    * Sun
    */
-  const sunSpherical = new THREE.Spherical(
-    1,
-    0.515221195188726,
-    -2.65150419962979,
+  const sunSpherical = useMemo(
+    () =>
+      new THREE.Spherical(
+        1,
+        0.515221195188726,
+        -2.65150419962979,
+      ),
+    [],
   );
-  const sunDirection = new THREE.Vector3();
+  const sunDirection = useMemo(
+    () => new THREE.Vector3(),
+    [],
+  );
 
   // Update sun
-  const updateSun = () => {
+  const updateSun = useCallback(() => {
     // Sun direction
     sunDirection.setFromSpherical(sunSpherical);
 
@@ -110,53 +96,56 @@ const Earth = () => {
     (
       atmosphereRef.current.material as THREE.ShaderMaterial
     ).uniforms.uSunDirection.value.copy(sunDirection);
-  };
+  }, [sunDirection, sunSpherical]);
 
   /**
-   * Debug
+   * Store
    */
-  gui
-    .add(sunSpherical, 'phi', 0, Math.PI)
-    .onChange(updateSun);
+  const isAnimating = useAnimationStore(
+    (state) => state.isAnimating,
+  );
 
-  gui
-    .add(sunSpherical, 'theta', -Math.PI, Math.PI)
-    .onChange(updateSun);
+  const { contextSafe } = useGSAP();
+  const { camera } = useThree();
+  const tl = gsap.timeline();
 
-  gui
-    .addColor(earthParameters, 'atmoshphereDayColor')
-    .onChange(() => {
-      (
-        earthRef.current.material as THREE.ShaderMaterial
-      ).uniforms.uAtmosphereDayColor.value.set(
-        earthParameters.atmoshphereDayColor,
+  const onClickAnimation = contextSafe(() => {
+    tl.to(groupRef.current.position, {
+      duration: 1.5,
+      x: 0,
+      y: window.innerHeight * 0.001 + 0.6,
+      ease: 'power2.inOut',
+    })
+      .to(
+        camera.position,
+        {
+          duration: 1.5,
+          x: 0,
+          y: 0,
+          z: 50,
+          ease: 'power2.inOut',
+        },
+        '<',
+      )
+      .to(
+        groupRef.current.rotation,
+        {
+          duration: 1.5,
+          x: Math.PI * 0.5,
+          y: Math.PI * 1.2,
+          ease: 'power2.inOut',
+        },
+        '<',
       );
-      (
-        atmosphereRef.current
-          .material as THREE.ShaderMaterial
-      ).uniforms.uAtmosphereDayColor.value.set(
-        earthParameters.atmoshphereDayColor,
-      );
-    });
+  });
 
-  gui
-    .addColor(earthParameters, 'atmosphereTwilightColor')
-    .onChange(() => {
-      (
-        earthRef.current.material as THREE.ShaderMaterial
-      ).uniforms.uAtmosphereTwilightColor.value.set(
-        earthParameters.atmosphereTwilightColor,
-      );
-      (
-        atmosphereRef.current
-          .material as THREE.ShaderMaterial
-      ).uniforms.uAtmosphereTwilightColor.value.set(
-        earthParameters.atmosphereTwilightColor,
-      );
-    });
+  if (isAnimating) {
+    onClickAnimation();
+  }
 
-  gui.add({ reset: () => gui.reset() }, 'reset');
-
+  /**
+   * Animate
+   */
   useFrame((_state, delta) => {
     earthRef.current.rotation.y += delta * 0.01;
     earthRef.current.rotation.x += delta * 0.01;
