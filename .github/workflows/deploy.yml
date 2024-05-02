@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: E2E
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  e2e:
     runs-on: ubuntu-latest
 
     steps:
