@@ -33,10 +33,11 @@ const Hero = () => {
     () => {
       if (progress === 100) {
         gsap.from('h1', {
-          delay: 1.2,
+          delay: 1.1,
           opacity: 0,
           y: 100,
           duration: 1,
+          ease: 'expo.inOut',
         });
       }
     },
@@ -44,16 +45,19 @@ const Hero = () => {
   );
 
   const { contextSafe } = useGSAP({ scope: sectionRef });
-  const tl = gsap.timeline();
 
   const hideHero = contextSafe(() => {
-    tl.to('h1', {
+    const tl = gsap.timeline();
+
+    tl.addLabel('start').to('h1', {
       opacity: 0,
       y: -200,
       duration: 0.6,
       ease: 'power2.inOut',
       onComplete: toggleFinished,
-    }).to(
+    });
+
+    tl.to(
       'Button',
       {
         opacity: 0,
@@ -61,7 +65,7 @@ const Hero = () => {
         duration: 0.6,
         ease: 'power2.inOut',
       },
-      '<',
+      'start',
     );
   });
 

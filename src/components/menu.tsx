@@ -23,32 +23,33 @@ const Menu = () => {
 
   return (
     <section
-      className="grid min-h-[100dvh] place-content-center gap-8 px-4"
+      className="mt-16 min-h-[100dvh] px-4"
       ref={sectionRef}
     >
-      <h1 className="max-w-[14ch] text-center text-4xl font-semibold">
+      <h1 className="max-w-[20ch] text-lg font-semibold">
         What would you like to do?
       </h1>
-      <div className="flex flex-col gap-4">
+      <div className="mt-4 grid grid-cols-1 gap-4">
         <Button
           variant="primary"
-          size="lg"
-          className="btn-hover-slide-right-outline group self-center border-foreground before:bg-foreground"
+          className="flex items-center gap-2"
         >
-          <span className="z-10 flex items-center gap-2 text-foreground transition group-hover:text-background">
-            <ArrowRight />
-            Browse
-          </span>
+          <span>Explore the venues</span>
+          <ArrowRight />
         </Button>
         <Button
           variant="primary"
-          size="lg"
-          className="btn-hover-slide-right-outline group self-center border-foreground before:bg-foreground"
+          className="flex items-center gap-2"
         >
-          <span className="z-10 flex items-center gap-2 text-foreground transition group-hover:text-background">
-            <ArrowRight />
-            Create
-          </span>
+          <span>Create your own</span>
+          <ArrowRight />
+        </Button>
+        <Button
+          variant="primary"
+          className="flex items-center gap-2"
+        >
+          <span>Manage your acccount</span>
+          <ArrowRight />
         </Button>
       </div>
     </section>
