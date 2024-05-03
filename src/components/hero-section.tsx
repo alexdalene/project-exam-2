@@ -56,7 +56,7 @@ const Hero = () => {
     tl.addLabel('start').to('h1', {
       opacity: 0,
       y: -200,
-      duration: 0.6,
+      duration: 0.7,
       ease: 'power2.inOut',
       onComplete: toggleFinished,
     });
@@ -66,7 +66,19 @@ const Hero = () => {
       {
         opacity: 0,
         y: 200,
-        duration: 0.6,
+        duration: 0.7,
+        ease: 'power2.inOut',
+      },
+      'start',
+    );
+
+    tl.to(
+      'p',
+      {
+        delay: 0.1,
+        opacity: 0,
+        y: -200,
+        duration: 0.7,
         ease: 'power2.inOut',
       },
       'start',
