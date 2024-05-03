@@ -44,13 +44,25 @@ const Hero = () => {
   );
 
   const { contextSafe } = useGSAP({ scope: sectionRef });
+  const tl = gsap.timeline();
 
   const hideHero = contextSafe(() => {
-    gsap.to(sectionRef.current, {
+    tl.to('h1', {
       opacity: 0,
+      y: -200,
       duration: 1,
+      ease: 'power2.inOut',
       onComplete: toggleFinished,
-    });
+    }).to(
+      'Button',
+      {
+        opacity: 0,
+        y: 200,
+        duration: 1,
+        ease: 'power2.inOut',
+      },
+      '<',
+    );
   });
 
   return (
@@ -67,7 +79,7 @@ const Hero = () => {
       <Button
         variant="primary"
         size="lg"
-        className="btn-hover-slide-right group"
+        className="btn-hover-slide-right-outline group"
         onClick={() => {
           toggleAnimation();
           hideHero();

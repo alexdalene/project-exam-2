@@ -24,6 +24,7 @@ const Earth = () => {
   /**
    * GSAP
    */
+  gsap.registerPlugin(useGSAP);
   const { progress } = useProgress();
 
   useGSAP(
@@ -105,49 +106,48 @@ const Earth = () => {
     (state) => state.isAnimating,
   );
 
-  const { contextSafe } = useGSAP();
+  /**
+   * Animation
+   */
   const { camera } = useThree();
-  const tl = gsap.timeline({
-    onComplete: () => {
-      dayTexture.anisotropy = 1;
-      nightTexture.anisotropy = 1;
-      specularCloudsTexture.anisotropy = 1;
-    },
-  });
+  const tl = gsap.timeline();
 
-  const onClickAnimation = contextSafe(() => {
-    tl.to(groupRef.current.position, {
-      duration: 1.5,
-      x: 0,
-      y: window.innerHeight * 0.001 + 0.6,
-      ease: 'power2.inOut',
-    })
-      .to(
-        camera.position,
-        {
+  useGSAP(
+    () => {
+      if (isAnimating) {
+        tl.to(groupRef.current.position, {
           duration: 1.5,
           x: 0,
-          y: 0,
-          z: 50,
+          y: window.innerHeight * 0.001 + 28,
           ease: 'power2.inOut',
-        },
-        '<',
-      )
-      .to(
-        groupRef.current.rotation,
-        {
-          duration: 1.5,
-          x: Math.PI * 0.5,
-          y: Math.PI * 1.2,
-          ease: 'power2.inOut',
-        },
-        '<',
-      );
-  });
-
-  if (isAnimating) {
-    onClickAnimation();
-  }
+        })
+          .to(
+            camera.position,
+            {
+              duration: 1.5,
+              z: 80,
+              ease: 'power2.inOut',
+            },
+            '<',
+          )
+          .to(
+            groupRef.current.rotation,
+            {
+              duration: 1.5,
+              x: Math.PI * 0.5,
+              y: Math.PI * 1.2,
+              ease: 'power2.inOut',
+            },
+            '<',
+          )
+          .then(() => {
+            sunSpherical.phi = 1.3;
+            updateSun();
+          });
+      }
+    },
+    { dependencies: [isAnimating] },
+  );
 
   /**
    * Animate
