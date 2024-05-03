@@ -112,13 +112,21 @@ const Earth = () => {
   const { camera } = useThree();
   const tl = gsap.timeline();
 
+  // Calculate the y position based on the camera's field of view and the distance of the planet from the camera
+  const distance = camera.position.z;
+  const yPosition =
+    Math.tan(
+      ((camera as THREE.PerspectiveCamera).fov / 2) *
+        (Math.PI / 180),
+    ) * distance;
+
   useGSAP(
     () => {
       if (isAnimating) {
         tl.to(groupRef.current.position, {
           duration: 1.5,
           x: 0,
-          y: window.innerHeight * 0.001 + 28,
+          y: Math.round(yPosition + 28),
           ease: 'power2.inOut',
         })
           .to(

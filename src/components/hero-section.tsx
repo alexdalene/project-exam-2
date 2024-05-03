@@ -50,7 +50,7 @@ const Hero = () => {
     tl.to('h1', {
       opacity: 0,
       y: -200,
-      duration: 1,
+      duration: 0.6,
       ease: 'power2.inOut',
       onComplete: toggleFinished,
     }).to(
@@ -58,7 +58,7 @@ const Hero = () => {
       {
         opacity: 0,
         y: 200,
-        duration: 1,
+        duration: 0.6,
         ease: 'power2.inOut',
       },
       '<',
