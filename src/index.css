@@ -82,10 +82,10 @@
   body {
     @apply bg-background text-foreground antialiased;
   }
-  .btn-hover-slide-right {
+  .btn-hover-slide-right-outline {
     @apply relative overflow-hidden before:absolute before:bottom-0 before:left-0 before:top-0 before:h-full before:w-0 before:bg-muted-foreground before:transition-all hover:before:w-full;
   }
-  .btn-hover-slide-left {
-    @apply relative overflow-hidden before:absolute before:bottom-0 before:right-0 before:top-0 before:h-full before:w-0 before:bg-muted-foreground before:transition-all hover:before:w-full;
+  .btn-hover-slide-right-fill {
+    @apply relative overflow-hidden before:absolute before:bottom-0 before:right-0 before:top-0 before:h-full before:w-full before:bg-foreground before:transition-all hover:before:w-0;
   }
 }
