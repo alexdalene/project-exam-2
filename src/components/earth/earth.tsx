@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { Mesh } from 'three';
 import { useTexture, useProgress } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Perf } from 'r3f-perf';
 
 import { useRef, useMemo, useCallback } from 'react';
 import gsap from 'gsap';
@@ -64,7 +63,7 @@ const Earth = () => {
    * Earth
    */
   const earthParameters = {
-    atmoshphereDayColor: '#00aaff',
+    atmosphereDayColor: '#00aaff',
     atmosphereTwilightColor: '#ff6600',
   };
 
@@ -165,7 +164,6 @@ const Earth = () => {
 
   return (
     <>
-      <Perf />
       <group position={[-0.5, -1.5, 0]} ref={groupRef}>
         <mesh ref={earthRef}>
           <sphereGeometry args={[2, 64, 64]} />
@@ -183,7 +181,7 @@ const Earth = () => {
               },
               uAtmosphereDayColor: new THREE.Uniform(
                 new THREE.Color(
-                  earthParameters.atmoshphereDayColor,
+                  earthParameters.atmosphereDayColor,
                 ),
               ),
               uAtmosphereTwilightColor: new THREE.Uniform(
@@ -211,7 +209,7 @@ const Earth = () => {
               },
               uAtmosphereDayColor: new THREE.Uniform(
                 new THREE.Color(
-                  earthParameters.atmoshphereDayColor,
+                  earthParameters.atmosphereDayColor,
                 ),
               ),
               uAtmosphereTwilightColor: new THREE.Uniform(
