@@ -79,7 +79,7 @@ const Hero = () => {
       <Button
         variant="primary"
         size="lg"
-        className="btn-hover-slide-right-outline group"
+        className="btn-hover-slide-right-outline group border-background text-background"
         onClick={() => {
           toggleAnimation();
           hideHero();
