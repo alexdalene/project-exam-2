@@ -22,32 +22,20 @@ const Menu = () => {
   );
 
   return (
-    <section
-      className="mt-16 min-h-[100dvh] px-4"
-      ref={sectionRef}
-    >
-      <h1 className="max-w-[20ch] text-lg font-semibold">
-        What would you like to do?
+    <section className="mt-16 min-h-[100dvh] px-4" ref={sectionRef}>
+      <h1 className="max-w-[30ch] text-xl font-semibold">
+        Welcome to Holidaze.
       </h1>
       <div className="mt-4 grid grid-cols-1 gap-4">
-        <Button
-          variant="primary"
-          className="flex items-center gap-2"
-        >
+        <Button variant="primary" className="flex items-center gap-2">
           <span>Explore the venues</span>
           <ArrowRight />
         </Button>
-        <Button
-          variant="primary"
-          className="flex items-center gap-2"
-        >
+        <Button variant="primary" className="flex items-center gap-2">
           <span>Create your own</span>
           <ArrowRight />
         </Button>
-        <Button
-          variant="primary"
-          className="flex items-center gap-2"
-        >
+        <Button variant="primary" className="flex items-center gap-2">
           <span>Manage your acccount</span>
           <ArrowRight />
         </Button>
