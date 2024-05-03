@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { Mesh } from 'three';
 import { useTexture, useProgress } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
+import { Perf } from 'r3f-perf';
 
 import { useRef, useMemo, useCallback } from 'react';
 import gsap from 'gsap';
@@ -107,7 +108,13 @@ const Earth = () => {
 
   const { contextSafe } = useGSAP();
   const { camera } = useThree();
-  const tl = gsap.timeline();
+  const tl = gsap.timeline({
+    onComplete: () => {
+      dayTexture.anisotropy = 1;
+      nightTexture.anisotropy = 1;
+      specularCloudsTexture.anisotropy = 1;
+    },
+  });
 
   const onClickAnimation = contextSafe(() => {
     tl.to(groupRef.current.position, {
@@ -149,10 +156,16 @@ const Earth = () => {
   useFrame((_state, delta) => {
     earthRef.current.rotation.y += delta * 0.01;
     earthRef.current.rotation.x += delta * 0.01;
+
+    if (isAnimating) {
+      earthRef.current.rotation.y += delta * 0.05;
+      earthRef.current.rotation.x += delta * 0.05;
+    }
   });
 
   return (
     <>
+      <Perf />
       <group position={[-0.5, -1.5, 0]} ref={groupRef}>
         <mesh ref={earthRef}>
           <sphereGeometry args={[2, 64, 64]} />
