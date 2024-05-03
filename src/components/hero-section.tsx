@@ -33,7 +33,7 @@ const Hero = () => {
           opacity: 0,
           y: 100,
           duration: 1,
-          ease: 'expo.inOut',
+          ease: 'power2.inOut',
         });
 
         gsap.from('p', {
@@ -41,7 +41,7 @@ const Hero = () => {
           opacity: 0,
           y: 100,
           duration: 1,
-          ease: 'expo.inOut',
+          ease: 'power2.inOut',
         });
       }
     },
@@ -91,7 +91,7 @@ const Hero = () => {
       ref={sectionRef}
     >
       <div>
-        <h1 className=" mb-4 text-5xl font-semibold">Holidaze.</h1>
+        <h1 className=" mb-4 text-5xl font-bold">Holidaze.</h1>
         <p className="max-w-[16ch] text-lg font-medium">
           Your next vacation is just a click away.
         </p>

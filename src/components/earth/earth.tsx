@@ -50,7 +50,7 @@ const Earth = () => {
           delay: 1.2,
           phi: 1.3,
           duration: 1.5,
-          ease: 'expo.inOut',
+          ease: 'power2.inOut',
           onUpdate: updateSun,
         });
       }

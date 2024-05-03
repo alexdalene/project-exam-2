@@ -20,7 +20,7 @@ const Loading = () => {
         tl.to('#progress', {
           width: `${progress}%`,
           duration: 1,
-          ease: 'expo.inOut',
+          ease: 'power1.inOut',
         }).to(containerRef.current, {
           translateY: '-100%',
           duration: 1,
