@@ -24,12 +24,12 @@ const buttonVariants = cva(
           'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         primary:
-          'w-fit content-end self-end bg-transparent text-2xl font-normal border border-muted-foreground text-background',
+          'w-fit content-end self-end bg-transparent font-normal border border-foreground text-foreground gap-2 hover:bg-muted-foreground',
         primaryOutline:
           'w-fit content-end self-end border border-muted-foreground bg-transparent text-lg font-normal text-background',
       },
       size: {
-        default: 'h-10 px-4 py-2',
+        default: 'h-10 px-4 py-2 rounded-2xl',
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-2xl px-8',
         icon: 'h-10 w-10',
