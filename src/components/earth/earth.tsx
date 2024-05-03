@@ -47,7 +47,7 @@ const Earth = () => {
     () => {
       if (progress === 100 && !isAnimating) {
         gsap.from(sunSpherical, {
-          delay: 1.2,
+          delay: 1,
           phi: 1.3,
           duration: 1.5,
           ease: 'power2.inOut',
@@ -134,7 +134,7 @@ const Earth = () => {
   /**
    * Sun
    */
-  const sunSpherical = useMemo(() => new THREE.Spherical(1, 0.5, -2.5), []);
+  const sunSpherical = useMemo(() => new THREE.Spherical(1, 0.7, -2.5), []);
   const sunDirection = useMemo(() => new THREE.Vector3(), []);
 
   // Update sun

@@ -29,7 +29,7 @@ const Hero = () => {
     () => {
       if (progress === 100) {
         gsap.from('h1', {
-          delay: 1.1,
+          delay: 1,
           opacity: 0,
           y: 100,
           duration: 1,
@@ -37,7 +37,7 @@ const Hero = () => {
         });
 
         gsap.from('p', {
-          delay: 1.2,
+          delay: 1.1,
           opacity: 0,
           y: 100,
           duration: 1,
