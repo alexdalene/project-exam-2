@@ -3,7 +3,6 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
-
 import {
   Sheet,
   SheetContent,
@@ -12,13 +11,30 @@ import {
 } from '@/components/ui/sheet';
 
 import { Link } from 'react-router-dom';
-
 import { Menu, LogIn, HomeIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { useRef } from 'react';
 
 const Navbar = () => {
+  const sectionRef = useRef(null!);
+
+  useGSAP(
+    () => {
+      gsap.from(sectionRef.current, {
+        opacity: 0,
+        delay: 0.2,
+        y: -100,
+        duration: 1,
+        ease: 'power2.inOut',
+      });
+    },
+    { scope: sectionRef },
+  );
+
   return (
-    <NavigationMenu>
+    <NavigationMenu ref={sectionRef}>
       <NavigationMenuList>
         <NavigationMenuItem>
           <Sheet>
