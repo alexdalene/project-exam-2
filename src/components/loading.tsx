@@ -40,6 +40,8 @@ const Loading = () => {
     if (animationDone) {
       toggleLoading();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animationDone]);
 
   return (
