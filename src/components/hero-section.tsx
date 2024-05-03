@@ -19,12 +19,8 @@ const Hero = () => {
   /**
    * Store
    */
-  const toggleAnimation = useAnimationStore(
-    (state) => state.toggleAnimation,
-  );
-  const toggleFinished = useAnimationStore(
-    (state) => state.toggleFinished,
-  );
+  const toggleAnimation = useAnimationStore((state) => state.toggleAnimation);
+  const toggleFinished = useAnimationStore((state) => state.toggleFinished);
 
   /**
    * Animation
@@ -34,6 +30,14 @@ const Hero = () => {
       if (progress === 100) {
         gsap.from('h1', {
           delay: 1.1,
+          opacity: 0,
+          y: 100,
+          duration: 1,
+          ease: 'expo.inOut',
+        });
+
+        gsap.from('p', {
+          delay: 1.2,
           opacity: 0,
           y: 100,
           duration: 1,
@@ -74,11 +78,12 @@ const Hero = () => {
       className="flex min-h-[100dvh] w-full flex-col justify-between px-4 py-16"
       ref={sectionRef}
     >
-      <h1 className=" text-5xl">
-        We'll help you{' '}
-        <span className="font-bold">find / create </span>
-        the perfect venue.
-      </h1>
+      <div>
+        <h1 className=" mb-4 text-5xl font-semibold">Holidaze.</h1>
+        <p className="max-w-[16ch] text-lg font-medium">
+          Your next vacation is just a click away.
+        </p>
+      </div>
 
       <Button
         variant="primary"
