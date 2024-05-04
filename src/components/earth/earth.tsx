@@ -1,13 +1,18 @@
+// Three
 import * as THREE from 'three';
 import { Mesh } from 'three';
 import { useTexture, useProgress, OrbitControls } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
-
-import { useRef, useMemo, useCallback, useEffect } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
 import { useControls } from 'leva';
 
+// React
+import { useRef, useMemo, useCallback, useEffect } from 'react';
+
+// GSAP
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+
+// Store
 import { useTimelineStore } from '@/store/timeline';
 
 // Earth shaders
