@@ -19,15 +19,21 @@ import atmosphereVertexShader from '@/assets/atmosphere/shaders/vertex.glsl';
 import atmosphereFragmentShader from '@/assets/atmosphere/shaders/fragment.glsl';
 
 const Earth = () => {
+  /**
+   * Refs
+   */
   const earthRef = useRef<Mesh>(null!);
   const atmosphereRef = useRef<Mesh>(null!);
   const groupRef = useRef<THREE.Group>(null!);
   const sunRef = useRef<Mesh>(null!);
   const yPosition = useRef(0);
-
   const earthMaterial = useRef<THREE.ShaderMaterial>(null!);
   const atmosphereMaterial = useRef<THREE.ShaderMaterial>(null!);
+  const masterTimelineRef = useRef<gsap.core.Timeline>();
 
+  /**
+   * Store
+   */
   const currentAct = useTimelineStore((state) => state.currentAct);
   const updateAct = useTimelineStore((state) => state.updateAct);
 
@@ -35,12 +41,16 @@ const Earth = () => {
    * GSAP
    */
   gsap.registerPlugin(useGSAP);
+
   const { progress } = useProgress();
   const { camera } = useThree();
-
-  const masterTimelineRef = useRef<gsap.core.Timeline>();
   const { contextSafe } = useGSAP();
 
+  /**
+   * Timeline
+   */
+
+  // Act intro
   const actIntro = contextSafe(() => {
     const tl = gsap.timeline({
       defaults: { duration: 1.5, ease: 'power2.inOut' },
@@ -53,6 +63,7 @@ const Earth = () => {
     });
   });
 
+  // Act two
   const actTwo = contextSafe(() => {
     const tl = gsap.timeline({
       defaults: { duration: 1.5, ease: 'power2.inOut' },
@@ -97,6 +108,7 @@ const Earth = () => {
     return tl;
   });
 
+  // Act three
   const actThree = contextSafe(() => {
     const tl = gsap.timeline({
       defaults: { duration: 1.5, ease: 'power2.inOut' },
