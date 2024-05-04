@@ -142,21 +142,15 @@ const Earth = () => {
       master.add(actThree());
 
       if (currentAct === 1) {
-        master.tweenTo(0, {
-          onUpdate: () => console.log(master.totalTime()),
-        });
+        master.tweenTo(0);
       }
 
       if (currentAct === 2) {
-        master.tweenTo(1.5, {
-          onUpdate: () => console.log(master.totalTime()),
-        });
+        master.tweenTo(1.5);
       }
 
       if (currentAct === 3) {
-        master.tweenTo(3, {
-          onUpdate: () => console.log(master.totalTime()),
-        });
+        master.tweenTo(3);
       }
     },
     { dependencies: [currentAct] },
@@ -274,6 +268,11 @@ const Earth = () => {
     },
   });
 
+  // Earth position
+  const { position } = useControls('Earth', {
+    position: { value: [0, 0, 0] },
+  });
+
   useEffect(() => {
     // Calculate the y position based on the camera's field of view and the distance of the planet from the camera
     const distance = camera.position.z;
@@ -290,7 +289,7 @@ const Earth = () => {
   return (
     <>
       {enableControls && <OrbitControls />}
-      <group position={[-0.5, -1.5, 0]} ref={groupRef}>
+      <group position={position} ref={groupRef}>
         {/* Earth */}
         <mesh ref={earthRef}>
           <sphereGeometry args={[2, 64, 64]} />
