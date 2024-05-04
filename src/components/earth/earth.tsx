@@ -6,8 +6,9 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useRef, useMemo, useCallback, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { useAnimationStore } from '@/store/animation';
 import { useControls } from 'leva';
+
+import { useTimelineStore } from '@/store/timeline';
 
 // Earth shaders
 import earthVertexShader from '@/assets/earth/shaders/vertex.glsl';
@@ -22,11 +23,13 @@ const Earth = () => {
   const atmosphereRef = useRef<Mesh>(null!);
   const groupRef = useRef<THREE.Group>(null!);
   const sunRef = useRef<Mesh>(null!);
+  const yPosition = useRef(0);
 
   const earthMaterial = useRef<THREE.ShaderMaterial>(null!);
   const atmosphereMaterial = useRef<THREE.ShaderMaterial>(null!);
 
-  const isAnimating = useAnimationStore((state) => state.isAnimating);
+  const currentAct = useTimelineStore((state) => state.currentAct);
+  const updateAct = useTimelineStore((state) => state.updateAct);
 
   /**
    * GSAP
@@ -35,75 +38,120 @@ const Earth = () => {
   const { progress } = useProgress();
   const { camera } = useThree();
 
-  const tl = gsap.timeline();
+  const masterTimelineRef = useRef<gsap.core.Timeline>();
+  const { contextSafe } = useGSAP();
 
-  // Calculate the y position based on the camera's field of view and the distance of the planet from the camera
-  const distance = camera.position.z;
-  const yPosition =
-    Math.tan(((camera as THREE.PerspectiveCamera).fov / 2) * (Math.PI / 180)) *
-    distance;
+  const actIntro = contextSafe(() => {
+    const tl = gsap.timeline({
+      defaults: { duration: 1.5, ease: 'power2.inOut' },
+    });
+
+    tl.from(sunSpherical, {
+      delay: 1,
+      phi: 1.3,
+      onUpdate: updateSun,
+    });
+  });
+
+  const actTwo = contextSafe(() => {
+    const tl = gsap.timeline({
+      defaults: { duration: 1.5, ease: 'power2.inOut' },
+    });
+
+    tl.to(
+      groupRef.current.position,
+      {
+        x: 0,
+        y: Math.round(yPosition.current + 28),
+      },
+      '<',
+    );
+
+    tl.to(
+      camera.position,
+      {
+        z: 80,
+      },
+      '<',
+    );
+
+    tl.to(
+      groupRef.current.rotation,
+      {
+        x: Math.PI * 0.5,
+        y: Math.PI * 1.2,
+      },
+      '<',
+    );
+
+    tl.to(
+      sunSpherical,
+      {
+        phi: 0.95,
+        theta: -1.0,
+        onUpdate: updateSun,
+      },
+      '<',
+    );
+
+    return tl;
+  });
+
+  const actThree = contextSafe(() => {
+    const tl = gsap.timeline({
+      defaults: { duration: 1.5, ease: 'power2.inOut' },
+    });
+
+    tl.to(
+      groupRef.current.rotation,
+      {
+        x: Math.PI * 2,
+      },
+      '<',
+    );
+
+    return tl;
+  });
 
   useGSAP(
     () => {
-      if (progress === 100 && !isAnimating) {
-        gsap.from(sunSpherical, {
-          delay: 1,
-          phi: 1.3,
-          duration: 1.5,
-          ease: 'power2.inOut',
-          onUpdate: updateSun,
+      if (!masterTimelineRef.current) {
+        masterTimelineRef.current = gsap.timeline({ paused: true });
+      }
+
+      const master = masterTimelineRef.current;
+
+      master.add(actTwo());
+      master.add(actThree());
+
+      if (currentAct === 1) {
+        master.tweenTo(0, {
+          onUpdate: () => console.log(master.totalTime()),
         });
       }
 
-      if (isAnimating) {
-        tl.addLabel('animate').to(groupRef.current.position, {
-          duration: 1.5,
-          x: 0,
-          y: Math.round(yPosition + 28),
-          ease: 'power2.inOut',
+      if (currentAct === 2) {
+        master.tweenTo(1.5, {
+          onUpdate: () => console.log(master.totalTime()),
         });
+      }
 
-        tl.to(
-          camera.position,
-          {
-            duration: 1.5,
-            z: 80,
-            ease: 'power2.inOut',
-          },
-          'animate',
-        );
-
-        tl.to(
-          groupRef.current.rotation,
-          {
-            duration: 1.5,
-            x: Math.PI * 0.5,
-            y: Math.PI * 1.2,
-            ease: 'power2.inOut',
-          },
-          'animate',
-        );
-
-        tl.to(
-          sunSpherical,
-          {
-            duration: 1.5,
-            phi: 0.95,
-            theta: -1.0,
-            ease: 'power2.inOut',
-            onUpdate: updateSun,
-          },
-          'animate',
-        );
-
-        tl.then(() => {
-          dayTexture.anisotropy = 1;
-          nightTexture.anisotropy = 1;
-          specularCloudsTexture.anisotropy = 1;
+      if (currentAct === 3) {
+        master.tweenTo(3, {
+          onUpdate: () => console.log(master.totalTime()),
         });
       }
     },
-    { dependencies: [isAnimating, progress] },
+    { dependencies: [currentAct] },
+  );
+
+  useGSAP(
+    () => {
+      if (progress === 100) {
+        actIntro();
+      }
+    },
+    { dependencies: [progress] },
   );
 
   /**
@@ -122,6 +170,14 @@ const Earth = () => {
   nightTexture.colorSpace = THREE.SRGBColorSpace;
 
   specularCloudsTexture.anisotropy = 8;
+
+  // IMPORTANT: This is a workaround to update the texture anisotropy
+  //
+  // const updateTextureAnisotropy = useCallback(() => {
+  //   dayTexture.anisotropy = 1;
+  //   nightTexture.anisotropy = 1;
+  //   specularCloudsTexture.anisotropy = 1;
+  // }, [dayTexture, nightTexture, specularCloudsTexture]);
 
   /**
    * Earth
@@ -155,11 +211,6 @@ const Earth = () => {
   useFrame((_state, delta) => {
     earthRef.current.rotation.y += delta * 0.01;
     earthRef.current.rotation.x += delta * 0.01;
-
-    if (isAnimating) {
-      earthRef.current.rotation.y += delta * 0.1;
-      earthRef.current.rotation.x += delta * 0.1;
-    }
   });
 
   /**
@@ -198,7 +249,22 @@ const Earth = () => {
     showDebugSun: false,
   });
 
+  // Update act
+  useControls('State', {
+    changeAct: {
+      options: [1, 2, 3],
+      onChange: (value) => updateAct(value),
+    },
+  });
+
   useEffect(() => {
+    // Calculate the y position based on the camera's field of view and the distance of the planet from the camera
+    const distance = camera.position.z;
+    yPosition.current =
+      Math.tan(
+        ((camera as THREE.PerspectiveCamera).fov / 2) * (Math.PI / 180),
+      ) * distance;
+
     updateSun();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -19,7 +19,7 @@ const Hero = () => {
   /**
    * Store
    */
-  const toggleAnimation = useAnimationStore((state) => state.toggleAnimation);
+  // const toggleAnimation = useAnimationStore((state) => state.toggleAnimation);
   const toggleFinished = useAnimationStore((state) => state.toggleFinished);
 
   /**
@@ -91,9 +91,9 @@ const Hero = () => {
       ref={sectionRef}
     >
       <div>
-        <h1 className=" mb-4 text-5xl font-bold">Holidaze.</h1>
-        <p className="max-w-[16ch] text-lg font-medium">
-          Your next vacation is just a click away.
+        <h1 className=" mb-4 text-5xl font-bold">We are Holidaze.</h1>
+        <p className="max-w-[16ch] text-lg text-muted">
+          The new way to find your next holiday destination.
         </p>
       </div>
 
@@ -102,7 +102,7 @@ const Hero = () => {
         size="lg"
         className="btn-hover-slide-right-outline group border-background text-background"
         onClick={() => {
-          toggleAnimation();
+          // toggleAnimation();
           hideHero();
         }}
       >
