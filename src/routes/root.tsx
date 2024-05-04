@@ -20,7 +20,7 @@ const Root = () => {
   return (
     <>
       <Leva hidden={hash} />
-      <div className="fixed left-0 top-0 z-0 h-full w-full overflow-hidden">
+      <div className="pointer-events-none fixed left-0 top-0 -z-10 h-full w-full overflow-hidden">
         <EarthContainer />
       </div>
 
