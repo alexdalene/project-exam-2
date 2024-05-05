@@ -63,7 +63,7 @@ const Earth = () => {
 
     tl.from(sunSpherical, {
       delay: 1,
-      phi: 1.3,
+      theta: -3,
       onUpdate: updateSun,
     });
   });
@@ -71,22 +71,13 @@ const Earth = () => {
   // Act two
   const actTwo = contextSafe(() => {
     const tl = gsap.timeline({
-      defaults: { duration: 1.5, ease: 'power2.inOut' },
+      defaults: { duration: 1.5, ease: 'expo.inOut' },
     });
 
     tl.to(
       groupRef.current.position,
       {
-        x: 0,
-        y: Math.round(yPosition.current + 28),
-      },
-      '<',
-    );
-
-    tl.to(
-      camera.position,
-      {
-        z: 80,
+        y: 18,
       },
       '<',
     );
@@ -95,7 +86,15 @@ const Earth = () => {
       groupRef.current.rotation,
       {
         x: Math.PI * 0.5,
-        y: Math.PI * 1.2,
+        y: -Math.PI * 0.5,
+      },
+      '<',
+    );
+
+    tl.to(
+      camera.position,
+      {
+        z: 50,
       },
       '<',
     );
@@ -103,8 +102,7 @@ const Earth = () => {
     tl.to(
       sunSpherical,
       {
-        phi: 0.95,
-        theta: -1.0,
+        theta: 0.7,
         onUpdate: updateSun,
       },
       '<',
@@ -116,13 +114,29 @@ const Earth = () => {
   // Act three
   const actThree = contextSafe(() => {
     const tl = gsap.timeline({
-      defaults: { duration: 1.5, ease: 'power2.inOut' },
+      defaults: { duration: 1.5, ease: 'expo.inOut' },
+    });
+
+    tl.to(groupRef.current.rotation, {
+      x: Math.PI * 0.25,
+      y: -Math.PI * 0.25,
     });
 
     tl.to(
-      groupRef.current.rotation,
+      camera.position,
       {
-        x: Math.PI * 2,
+        x: -1,
+        z: 8,
+      },
+      '<',
+    );
+
+    tl.to(
+      sunSpherical,
+      {
+        phi: 0.7,
+        theta: -1.7,
+        onUpdate: updateSun,
       },
       '<',
     );
@@ -201,7 +215,7 @@ const Earth = () => {
   /**
    * Sun
    */
-  const sunSpherical = useMemo(() => new THREE.Spherical(1, 0.7, -2.5), []);
+  const sunSpherical = useMemo(() => new THREE.Spherical(1, 0.8, -1.1), []);
   const sunDirection = useMemo(() => new THREE.Vector3(), []);
 
   // Update sun
@@ -220,8 +234,8 @@ const Earth = () => {
    * Animate
    */
   useFrame((_state, delta) => {
-    earthRef.current.rotation.y += delta * 0.01;
-    earthRef.current.rotation.x += delta * 0.01;
+    earthRef.current.rotation.y += delta * 0.03;
+    earthRef.current.rotation.x += delta * 0.03;
   });
 
   /**
@@ -270,7 +284,7 @@ const Earth = () => {
 
   // Earth position
   const { position } = useControls('Earth', {
-    position: { value: [0, 0, 0] },
+    position: { value: [0, 0.5, 0] },
   });
 
   useEffect(() => {

@@ -17,8 +17,7 @@ type AnimationStore = {
 const useAnimationStore = create<AnimationStore>((set) => ({
   isAnimating: false,
   isFinished: false,
-  toggleAnimation: () =>
-    set((state) => ({ isAnimating: !state.isAnimating })),
+  toggleAnimation: () => set((state) => ({ isAnimating: !state.isAnimating })),
   toggleFinished: () => {
     set((state) => ({ isFinished: !state.isFinished }));
   },

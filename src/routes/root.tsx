@@ -1,7 +1,7 @@
 import EarthContainer from '@/components/earth/earth-container';
-// import Navbar from '@/components/navbar';
+import Loading from '@/components/loading';
 
-// import { useAnimationStore } from '@/store/animation';
+import { useLoadingStore } from '@/store/loading';
 
 import { Outlet } from 'react-router-dom';
 import { Leva } from 'leva';
@@ -9,7 +9,8 @@ import { useState, useEffect } from 'react';
 
 const Root = () => {
   const [hash, setHash] = useState(true);
-  // const isFinished = useAnimationStore((state) => state.isFinished);
+
+  const isLoading = useLoadingStore((state) => state.isLoading);
 
   useEffect(() => {
     if (window.location.hash === '#debug') {
@@ -19,9 +20,9 @@ const Root = () => {
 
   return (
     <>
-      <Leva hidden={hash} />
+      {isLoading && <Loading />}
 
-      {/* {isFinished && <Navbar />} */}
+      <Leva hidden={hash} />
 
       <main className="min-h-dvh">
         <Outlet />
