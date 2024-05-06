@@ -77,7 +77,7 @@ const Earth = () => {
     tl.to(
       groupRef.current.position,
       {
-        y: 18,
+        y: 30,
       },
       '<',
     );
@@ -94,7 +94,7 @@ const Earth = () => {
     tl.to(
       camera.position,
       {
-        z: 50,
+        z: 80,
       },
       '<',
     );

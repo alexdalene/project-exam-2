@@ -5,12 +5,12 @@ type Venue = {
   media: { url: string; alt: string }[];
 };
 
-type State = {
+type VenueStore = {
   venues: Venue[];
   fetchVenues: () => Promise<void>;
 };
 
-const useVenueStore = create<State>((set) => ({
+const useVenueStore = create<VenueStore>((set) => ({
   venues: [],
   fetchVenues: async () => {
     try {

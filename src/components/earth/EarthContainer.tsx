@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import Earth from '@/components/earth/earth';
+import Earth from '@/components/earth/Earth';
 
 const EarthContainer = () => {
   return (
