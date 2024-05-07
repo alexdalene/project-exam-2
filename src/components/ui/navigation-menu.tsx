@@ -30,7 +30,7 @@ const NavigationMenuList = React.forwardRef<
   <NavigationMenuPrimitive.List
     ref={ref}
     className={cn(
-      'group mx-auto mt-3 flex w-full max-w-[1100px] flex-1 list-none items-center justify-between rounded-2xl border border-b border-black/5 bg-gradient-to-tr from-stone-100/15 to-stone-200/30 px-4 py-3 shadow-inner shadow-white/10 backdrop-blur-xl md:justify-center',
+      'group mx-auto mt-3 flex w-full max-w-[1100px] flex-1 list-none items-center justify-between rounded-2xl border border-b border-black/5 bg-gradient-to-tr from-stone-100/5 to-stone-200/20 px-4 py-3 shadow-inner shadow-white/10 backdrop-blur-xl md:justify-center',
       className,
     )}
     {...props}
