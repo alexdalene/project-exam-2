@@ -6,7 +6,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useControls } from 'leva';
 
 // React
-import { useRef, useMemo, useCallback, useEffect } from 'react';
+import { useRef, useMemo, useCallback } from 'react';
 
 // GSAP
 import gsap from 'gsap';
@@ -14,6 +14,7 @@ import { useGSAP } from '@gsap/react';
 
 // Store
 import { useTimelineStore } from '@/store/timeline';
+import { useContinentStore } from '@/store/continent';
 
 // Earth shaders
 import earthVertexShader from '@/assets/earth/shaders/vertex.glsl';
@@ -31,16 +32,20 @@ const Earth = () => {
   const atmosphereRef = useRef<Mesh>(null!);
   const groupRef = useRef<THREE.Group>(null!);
   const sunRef = useRef<Mesh>(null!);
-  const yPosition = useRef(0);
+  // const yPosition = useRef(0);
   const earthMaterial = useRef<THREE.ShaderMaterial>(null!);
   const atmosphereMaterial = useRef<THREE.ShaderMaterial>(null!);
   const masterTimelineRef = useRef<gsap.core.Timeline>();
+  const mouse = useRef({ x: 0, y: 0 });
 
   /**
    * Store
    */
   const currentAct = useTimelineStore((state) => state.currentAct);
   const updateAct = useTimelineStore((state) => state.updateAct);
+  const continent = useContinentStore((state) => state.continent);
+
+  console.log(continent);
 
   /**
    * GSAP
@@ -77,7 +82,7 @@ const Earth = () => {
     tl.to(
       groupRef.current.position,
       {
-        y: 30,
+        y: 0,
       },
       '<',
     );
@@ -85,8 +90,9 @@ const Earth = () => {
     tl.to(
       groupRef.current.rotation,
       {
-        x: Math.PI * 0.5,
-        y: -Math.PI * 0.5,
+        x: continent.position.x,
+        y: continent.position.y,
+        z: continent.position.z,
       },
       '<',
     );
@@ -94,7 +100,7 @@ const Earth = () => {
     tl.to(
       camera.position,
       {
-        z: 80,
+        z: 15,
       },
       '<',
     );
@@ -114,29 +120,16 @@ const Earth = () => {
   // Act three
   const actThree = contextSafe(() => {
     const tl = gsap.timeline({
-      defaults: { duration: 1.5, ease: 'expo.inOut' },
-    });
-
-    tl.to(groupRef.current.rotation, {
-      x: Math.PI * 0.25,
-      y: -Math.PI * 0.25,
+      defaults: {
+        duration: 1.5,
+        ease: 'power2.inOut',
+      },
     });
 
     tl.to(
       camera.position,
       {
-        x: -1,
         z: 8,
-      },
-      '<',
-    );
-
-    tl.to(
-      sunSpherical,
-      {
-        phi: 0.7,
-        theta: -1.7,
-        onUpdate: updateSun,
       },
       '<',
     );
@@ -172,11 +165,34 @@ const Earth = () => {
 
   useGSAP(
     () => {
+      if (currentAct === 2) {
+        gsap.to(groupRef.current.rotation, {
+          x: continent.position.x,
+          y: continent.position.y,
+          z: continent.position.z,
+        });
+      }
+    },
+    { dependencies: [continent] },
+  );
+
+  useGSAP(
+    () => {
       if (progress === 100) {
         actIntro();
       }
     },
     { dependencies: [progress] },
+  );
+
+  useGSAP(
+    () => {
+      gsap.to(camera.position, {
+        x: mouse.current.x * 0.01,
+        y: mouse.current.y * 0.01,
+      });
+    },
+    { dependencies: [mouse] },
   );
 
   /**
@@ -196,9 +212,9 @@ const Earth = () => {
 
   specularCloudsTexture.anisotropy = 8;
 
-  // IMPORTANT: This is a workaround to update the texture anisotropy
-  //
+  // Update texture anisotropy
   // const updateTextureAnisotropy = useCallback(() => {
+  //   console.log('updateTextureAnisotropy');
   //   dayTexture.anisotropy = 1;
   //   nightTexture.anisotropy = 1;
   //   specularCloudsTexture.anisotropy = 1;
@@ -234,8 +250,10 @@ const Earth = () => {
    * Animate
    */
   useFrame((_state, delta) => {
-    earthRef.current.rotation.y += delta * 0.03;
-    earthRef.current.rotation.x += delta * 0.03;
+    if (currentAct === 1) {
+      groupRef.current.rotation.y -= delta * 0.05;
+      groupRef.current.rotation.x += delta * 0.05;
+    }
   });
 
   /**
@@ -287,23 +305,26 @@ const Earth = () => {
     position: { value: [0, 0.5, 0] },
   });
 
-  useEffect(() => {
-    // Calculate the y position based on the camera's field of view and the distance of the planet from the camera
-    const distance = camera.position.z;
-    yPosition.current =
-      Math.tan(
-        ((camera as THREE.PerspectiveCamera).fov / 2) * (Math.PI / 180),
-      ) * distance;
+  // Earth rotation
+  const { rotation } = useControls('Earth', {
+    rotation: { value: [0, 0, 0] },
+  });
 
-    updateSun();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   // // Calculate the y position based on the camera's field of view and the distance of the planet from the camera
+  //   // const distance = camera.position.z;
+  //   // yPosition.current =
+  //   //   Math.tan(
+  //   //     ((camera as THREE.PerspectiveCamera).fov / 2) * (Math.PI / 180),
+  //   //   ) * distance;
+  //   // updateSun();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <>
       {enableControls && <OrbitControls />}
-      <group position={position} ref={groupRef}>
+      <group position={position} ref={groupRef} rotation={rotation}>
         {/* Earth */}
         <mesh ref={earthRef}>
           <sphereGeometry args={[2, 64, 64]} />
