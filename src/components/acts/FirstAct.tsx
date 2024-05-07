@@ -15,11 +15,7 @@ const FirstAct = () => {
         </p>
       </div>
       <div className="row-start-5 self-start justify-self-center">
-        <Button
-          variant="test"
-          className="gap-2 rounded-xl border border-black/5 bg-gradient-to-br from-stone-100/5 to-stone-200/20 text-sm font-medium shadow-inner shadow-white/10 backdrop-blur-xl"
-          onClick={() => updateAct(2)}
-        >
+        <Button variant="glass" onClick={() => updateAct(2)}>
           Begin <ArrowRight size={14} />
         </Button>
       </div>
