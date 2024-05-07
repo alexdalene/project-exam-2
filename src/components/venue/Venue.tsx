@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+// import gsap from 'gsap';
+// import { useGSAP } from '@gsap/react';
+// import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface VenueProps {
   media: {
@@ -25,35 +25,32 @@ const Venue = ({ media }: VenueProps) => {
     img.onload = () => setIsLoading(false);
   }, [media]);
 
-  useGSAP(
-    () => {
-      gsap.registerPlugin(ScrollTrigger);
+  // useGSAP(
+  //   () => {
+  //     gsap.registerPlugin(ScrollTrigger);
 
-      gsap.to(venueRef.current, {
-        scrollTrigger: {
-          trigger: venueRef.current,
-          start: 'top 60%',
-          end: 'bottom 40%',
-          scrub: 1,
-        },
-        scale: 0.8,
-      });
-    },
-    { scope: venueRef.current, dependencies: [isLoading] },
-  );
+  //     gsap.to(venueRef.current, {
+  //       scrollTrigger: {
+  //         trigger: venueRef.current,
+  //         start: 'top 60%',
+  //         end: 'bottom 40%',
+  //         scrub: 1,
+  //       },
+  //       scale: 0.8,
+  //     });
+  //   },
+  //   { scope: venueRef.current, dependencies: [isLoading] },
+  // );
 
   return (
-    <div
-      className="w-full max-w-full overflow-hidden rounded-lg"
-      ref={venueRef}
-    >
+    <div className="max-h-full max-w-full" ref={venueRef}>
       {isLoading && <Skeleton className="aspect-square h-full w-full" />}
       {!isLoading && (
         <img
           ref={imgRef}
           src={media[0]?.url}
           alt={media[0]?.alt}
-          className="aspect-square h-full w-full object-cover"
+          className="aspect-square h-full w-full rounded-lg object-cover"
         />
       )}
     </div>
