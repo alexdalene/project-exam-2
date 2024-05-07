@@ -3,7 +3,6 @@ import Loading from '@/components/Loading';
 import Navbar from '@/components/Navbar';
 
 import { useLoadingStore } from '@/store/loading';
-import { useTimelineStore } from '@/store/timeline';
 
 import { Outlet } from 'react-router-dom';
 import { Leva } from 'leva';
@@ -13,7 +12,6 @@ const Root = () => {
   const [hash, setHash] = useState(true);
 
   const isLoading = useLoadingStore((state) => state.isLoading);
-  const currentAct = useTimelineStore((state) => state.currentAct);
 
   useEffect(() => {
     if (location.hash === '#debug') {
@@ -24,7 +22,7 @@ const Root = () => {
   return (
     <>
       {isLoading && <Loading />}
-      {currentAct !== 1 && <Navbar />}
+      <Navbar />
 
       <Leva hidden={hash} />
 
