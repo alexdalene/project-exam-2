@@ -12,7 +12,7 @@ const NavigationMenu = React.forwardRef<
   <NavigationMenuPrimitive.Root
     ref={ref}
     className={cn(
-      'sticky top-0 z-10 flex min-w-full max-w-max items-center justify-end px-4 py-4',
+      'fixed top-0 z-10 flex w-full flex-col justify-end px-4 md:justify-stretch',
       className,
     )}
     {...props}
@@ -30,7 +30,7 @@ const NavigationMenuList = React.forwardRef<
   <NavigationMenuPrimitive.List
     ref={ref}
     className={cn(
-      'group flex flex-1 list-none items-center justify-center',
+      'group mx-auto mt-3 flex w-full max-w-[1100px] flex-1 list-none items-center justify-between rounded-2xl border border-b border-black/5 bg-gradient-to-tr from-stone-100/15 to-stone-200/30 px-4 py-3 shadow-inner shadow-white/10 backdrop-blur-xl md:justify-center',
       className,
     )}
     {...props}
@@ -41,7 +41,7 @@ NavigationMenuList.displayName = NavigationMenuPrimitive.List.displayName;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = cva(
-  'group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50',
+  'group flex h-10 w-max items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:bg-white/60 rounded-xl focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50',
 );
 
 const NavigationMenuTrigger = React.forwardRef<
