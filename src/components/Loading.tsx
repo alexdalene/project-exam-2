@@ -20,7 +20,7 @@ const Loading = () => {
         tl.to('#progress', {
           width: `${progress}%`,
           duration: 1,
-          ease: 'expo.inOut',
+          ease: 'power1.inOut',
         }).to(containerRef.current, {
           translateY: '-100%',
           duration: 1,
@@ -40,6 +40,8 @@ const Loading = () => {
     if (animationDone) {
       toggleLoading();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animationDone]);
 
   return (

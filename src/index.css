@@ -3,12 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  @font-face {
-    font-family: 'Inter';
-    src: url('@/assets/fonts/Inter.ttf') format('truetype');
-    font-weight: 400 700;
-    font-style: normal;
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 }
 
 @layer base {
@@ -28,7 +23,7 @@
     --secondary: 32 98% 83%;
     --secondary-foreground: 31 97% 72%;
 
-    --muted: 25 5% 45%;
+    --muted: 25 5% 55%;
     --muted-foreground: 20 6% 90%;
 
     --accent: 60 4.8% 95.9%;
@@ -82,10 +77,10 @@
   body {
     @apply bg-background text-foreground antialiased;
   }
-  .btn-hover-slide-right-outline {
-    @apply relative overflow-hidden before:absolute before:bottom-0 before:left-0 before:top-0 before:h-full before:w-0 before:bg-muted-foreground before:transition-all hover:before:w-full;
+  .hover-slide-right-dark {
+    @apply relative overflow-hidden before:absolute before:bottom-0 before:left-0 before:top-0 before:-z-10 before:h-full before:w-0 before:bg-foreground before:transition-all hover:text-background hover:before:w-full;
   }
-  .btn-hover-slide-right-fill {
-    @apply relative overflow-hidden before:absolute before:bottom-0 before:right-0 before:top-0 before:h-full before:w-full before:bg-foreground before:transition-all hover:before:w-0;
+  .hover-slide-left-dark {
+    @apply relative overflow-hidden before:absolute before:bottom-0 before:right-0 before:top-0 before:-z-10 before:h-full before:w-0 before:bg-foreground before:transition-all hover:text-background hover:before:w-full;
   }
 }

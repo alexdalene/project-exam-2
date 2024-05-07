@@ -1,13 +1,20 @@
+// Three
 import * as THREE from 'three';
 import { Mesh } from 'three';
 import { useTexture, useProgress, OrbitControls } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
+import { useControls } from 'leva';
 
-import { useRef, useMemo, useCallback, useEffect } from 'react';
+// React
+import { useRef, useMemo, useCallback } from 'react';
+
+// GSAP
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { useAnimationStore } from '@/store/animation';
-import { useControls } from 'leva';
+
+// Store
+import { useTimelineStore } from '@/store/timeline';
+import { useContinentStore } from '@/store/continent';
 
 // Earth shaders
 import earthVertexShader from '@/assets/earth/shaders/vertex.glsl';
@@ -18,92 +25,174 @@ import atmosphereVertexShader from '@/assets/atmosphere/shaders/vertex.glsl';
 import atmosphereFragmentShader from '@/assets/atmosphere/shaders/fragment.glsl';
 
 const Earth = () => {
+  /**
+   * Refs
+   */
   const earthRef = useRef<Mesh>(null!);
   const atmosphereRef = useRef<Mesh>(null!);
   const groupRef = useRef<THREE.Group>(null!);
   const sunRef = useRef<Mesh>(null!);
-
+  // const yPosition = useRef(0);
   const earthMaterial = useRef<THREE.ShaderMaterial>(null!);
   const atmosphereMaterial = useRef<THREE.ShaderMaterial>(null!);
+  const masterTimelineRef = useRef<gsap.core.Timeline>();
+  const mouse = useRef({ x: 0, y: 0 });
 
-  const isAnimating = useAnimationStore((state) => state.isAnimating);
+  /**
+   * Store
+   */
+  const currentAct = useTimelineStore((state) => state.currentAct);
+  const updateAct = useTimelineStore((state) => state.updateAct);
+  const continent = useContinentStore((state) => state.continent);
+
+  console.log(continent);
 
   /**
    * GSAP
    */
   gsap.registerPlugin(useGSAP);
+
   const { progress } = useProgress();
   const { camera } = useThree();
+  const { contextSafe } = useGSAP();
 
-  const tl = gsap.timeline();
+  /**
+   * Timeline
+   */
 
-  // Calculate the y position based on the camera's field of view and the distance of the planet from the camera
-  const distance = camera.position.z;
-  const yPosition =
-    Math.tan(((camera as THREE.PerspectiveCamera).fov / 2) * (Math.PI / 180)) *
-    distance;
+  // Act intro
+  const actIntro = contextSafe(() => {
+    const tl = gsap.timeline({
+      defaults: { duration: 1.5, ease: 'power2.inOut' },
+    });
+
+    tl.from(sunSpherical, {
+      delay: 1,
+      theta: -3,
+      onUpdate: updateSun,
+    });
+  });
+
+  // Act two
+  const actTwo = contextSafe(() => {
+    const tl = gsap.timeline({
+      defaults: { duration: 1.5, ease: 'expo.inOut' },
+    });
+
+    tl.to(
+      groupRef.current.position,
+      {
+        y: 0,
+      },
+      '<',
+    );
+
+    tl.to(
+      groupRef.current.rotation,
+      {
+        x: continent.position.x,
+        y: continent.position.y,
+        z: continent.position.z,
+      },
+      '<',
+    );
+
+    tl.to(
+      camera.position,
+      {
+        z: 15,
+      },
+      '<',
+    );
+
+    tl.to(
+      sunSpherical,
+      {
+        theta: 0.7,
+        onUpdate: updateSun,
+      },
+      '<',
+    );
+
+    return tl;
+  });
+
+  // Act three
+  const actThree = contextSafe(() => {
+    const tl = gsap.timeline({
+      defaults: {
+        duration: 1.5,
+        ease: 'power2.inOut',
+      },
+    });
+
+    tl.to(
+      camera.position,
+      {
+        z: 8,
+      },
+      '<',
+    );
+
+    return tl;
+  });
 
   useGSAP(
     () => {
-      if (progress === 100 && !isAnimating) {
-        gsap.from(sunSpherical, {
-          delay: 1.2,
-          phi: 1.3,
-          duration: 1.5,
-          ease: 'expo.inOut',
-          onUpdate: updateSun,
-        });
+      if (!masterTimelineRef.current) {
+        masterTimelineRef.current = gsap.timeline({ paused: true });
       }
 
-      if (isAnimating) {
-        tl.addLabel('animate').to(groupRef.current.position, {
-          duration: 1.5,
-          x: 0,
-          y: Math.round(yPosition + 28),
-          ease: 'power2.inOut',
-        });
+      const master = masterTimelineRef.current;
 
-        tl.to(
-          camera.position,
-          {
-            duration: 1.5,
-            z: 80,
-            ease: 'power2.inOut',
-          },
-          'animate',
-        );
+      master.add(actTwo());
+      master.add(actThree());
 
-        tl.to(
-          groupRef.current.rotation,
-          {
-            duration: 1.5,
-            x: Math.PI * 0.5,
-            y: Math.PI * 1.2,
-            ease: 'power2.inOut',
-          },
-          'animate',
-        );
+      if (currentAct === 1) {
+        master.tweenTo(0);
+      }
 
-        tl.to(
-          sunSpherical,
-          {
-            duration: 1.5,
-            phi: 0.95,
-            theta: -1.0,
-            ease: 'power2.inOut',
-            onUpdate: updateSun,
-          },
-          'animate',
-        );
+      if (currentAct === 2) {
+        master.tweenTo(1.5);
+      }
 
-        tl.then(() => {
-          dayTexture.anisotropy = 1;
-          nightTexture.anisotropy = 1;
-          specularCloudsTexture.anisotropy = 1;
+      if (currentAct === 3) {
+        master.tweenTo(3);
+      }
+    },
+    { dependencies: [currentAct] },
+  );
+
+  useGSAP(
+    () => {
+      if (currentAct === 2) {
+        gsap.to(groupRef.current.rotation, {
+          x: continent.position.x,
+          y: continent.position.y,
+          z: continent.position.z,
         });
       }
     },
-    { dependencies: [isAnimating, progress] },
+    { dependencies: [continent] },
+  );
+
+  useGSAP(
+    () => {
+      if (progress === 100) {
+        actIntro();
+      }
+    },
+    { dependencies: [progress] },
+  );
+
+  useGSAP(
+    () => {
+      gsap.to(camera.position, {
+        x: mouse.current.x * 0.01,
+        y: mouse.current.y * 0.01,
+      });
+    },
+    { dependencies: [mouse] },
   );
 
   /**
@@ -123,6 +212,14 @@ const Earth = () => {
 
   specularCloudsTexture.anisotropy = 8;
 
+  // Update texture anisotropy
+  // const updateTextureAnisotropy = useCallback(() => {
+  //   console.log('updateTextureAnisotropy');
+  //   dayTexture.anisotropy = 1;
+  //   nightTexture.anisotropy = 1;
+  //   specularCloudsTexture.anisotropy = 1;
+  // }, [dayTexture, nightTexture, specularCloudsTexture]);
+
   /**
    * Earth
    */
@@ -134,7 +231,7 @@ const Earth = () => {
   /**
    * Sun
    */
-  const sunSpherical = useMemo(() => new THREE.Spherical(1, 0.5, -2.5), []);
+  const sunSpherical = useMemo(() => new THREE.Spherical(1, 0.8, -1.1), []);
   const sunDirection = useMemo(() => new THREE.Vector3(), []);
 
   // Update sun
@@ -153,12 +250,9 @@ const Earth = () => {
    * Animate
    */
   useFrame((_state, delta) => {
-    earthRef.current.rotation.y += delta * 0.01;
-    earthRef.current.rotation.x += delta * 0.01;
-
-    if (isAnimating) {
-      earthRef.current.rotation.y += delta * 0.1;
-      earthRef.current.rotation.x += delta * 0.1;
+    if (currentAct === 1) {
+      groupRef.current.rotation.y -= delta * 0.05;
+      groupRef.current.rotation.x += delta * 0.05;
     }
   });
 
@@ -198,14 +292,39 @@ const Earth = () => {
     showDebugSun: false,
   });
 
-  useEffect(() => {
-    updateSun();
-  }, []);
+  // Update act
+  useControls('State', {
+    changeAct: {
+      options: [1, 2, 3],
+      onChange: (value) => updateAct(value),
+    },
+  });
+
+  // Earth position
+  const { position } = useControls('Earth', {
+    position: { value: [0, 0.5, 0] },
+  });
+
+  // Earth rotation
+  const { rotation } = useControls('Earth', {
+    rotation: { value: [0, 0, 0] },
+  });
+
+  // useEffect(() => {
+  //   // // Calculate the y position based on the camera's field of view and the distance of the planet from the camera
+  //   // const distance = camera.position.z;
+  //   // yPosition.current =
+  //   //   Math.tan(
+  //   //     ((camera as THREE.PerspectiveCamera).fov / 2) * (Math.PI / 180),
+  //   //   ) * distance;
+  //   // updateSun();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <>
       {enableControls && <OrbitControls />}
-      <group position={[-0.5, -1.5, 0]} ref={groupRef}>
+      <group position={position} ref={groupRef} rotation={rotation}>
         {/* Earth */}
         <mesh ref={earthRef}>
           <sphereGeometry args={[2, 64, 64]} />

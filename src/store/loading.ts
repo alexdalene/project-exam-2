@@ -14,8 +14,7 @@ type LoadingStore = {
  */
 const useLoadingStore = create<LoadingStore>((set) => ({
   isLoading: true,
-  toggleLoading: () =>
-    set((state) => ({ isLoading: !state.isLoading })),
+  toggleLoading: () => set((state) => ({ isLoading: !state.isLoading })),
 }));
 
 export { useLoadingStore };

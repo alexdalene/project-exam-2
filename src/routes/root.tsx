@@ -1,24 +1,38 @@
-import EarthContainer from '@/components/earth/earth-container';
-import Navbar from '@/components/navbar';
+import EarthContainer from '@/components/earth/EarthContainer';
+import Loading from '@/components/Loading';
+import Navbar from '@/components/Navbar';
 
-import { useAnimationStore } from '@/store/animation';
+import { useLoadingStore } from '@/store/loading';
 
 import { Outlet } from 'react-router-dom';
+import { Leva } from 'leva';
+import { useState, useEffect } from 'react';
 
 const Root = () => {
-  const isFinished = useAnimationStore((state) => state.isFinished);
+  const [hash, setHash] = useState(true);
+
+  const isLoading = useLoadingStore((state) => state.isLoading);
+
+  useEffect(() => {
+    if (location.hash === '#debug') {
+      setHash(false);
+    }
+  }, []);
 
   return (
     <>
-      <div className="fixed left-0 top-0 z-0 h-full w-full overflow-hidden">
-        <EarthContainer />
-      </div>
+      {isLoading && <Loading />}
+      <Navbar />
 
-      {isFinished && <Navbar />}
+      <Leva hidden={hash} />
 
-      <main className="z-10">
+      <main className="min-h-dvh">
         <Outlet />
       </main>
+
+      <div className="fixed left-0 top-0 -z-10 h-full w-full">
+        <EarthContainer />
+      </div>
     </>
   );
 };

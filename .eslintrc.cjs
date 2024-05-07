@@ -8,11 +8,7 @@ module.exports = {
     'plugin:cypress/recommended',
     'prettier',
   ],
-  ignorePatterns: [
-    'dist',
-    '.eslintrc.cjs',
-    'cypress.config.ts',
-  ],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'cypress.config.ts'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh', 'cypress'],
   rules: {

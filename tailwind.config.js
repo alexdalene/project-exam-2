@@ -20,6 +20,9 @@ module.exports = {
       sans: ['Inter', 'sans-serif'],
     },
     extend: {
+      boxShadow: {
+        inner: 'inset 0 1px 1px 0 rgb(0 0 0 / 0.05)',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

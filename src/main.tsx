@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './routes/App';
+import Venues from './routes/Venues';
 import Root from './routes/root';
 import './index.css';
 import ErrorPage from './ErrorPage';
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <App />,
+      },
+      {
+        path: '/venues',
+        element: <Venues />,
       },
     ],
   },
