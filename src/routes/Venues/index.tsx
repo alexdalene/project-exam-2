@@ -1,5 +1,6 @@
 import { useLoadingStore } from '@/store/loading';
 import { useTimelineStore } from '@/store/timeline';
+import { useVenueStore } from '@/store/venues';
 
 import { useEffect, useRef } from 'react';
 
@@ -9,6 +10,8 @@ import { useGSAP } from '@gsap/react';
 const Venues = () => {
   const isLoading = useLoadingStore((state) => state.isLoading);
   const updateAct = useTimelineStore((state) => state.updateAct);
+  const fetchVenues = useVenueStore((state) => state.fetchVenues);
+  const venues = useVenueStore((state) => state.venues);
 
   const sectionRef = useRef<HTMLDivElement>(null!);
 
@@ -24,8 +27,11 @@ const Venues = () => {
   useEffect(() => {
     if (!isLoading) {
       updateAct(3);
+      fetchVenues();
     }
-  }, [isLoading, updateAct]);
+  }, [isLoading, updateAct, fetchVenues]);
+
+  console.log(venues);
 
   return (
     <section
