@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 /**
  * Represents the timeline store.
@@ -12,9 +13,11 @@ type TimelineStore = {
  * Custom hook for managing timeline state.
  * @returns The timeline store object.
  */
-const useTimelineStore = create<TimelineStore>((set) => ({
-  currentAct: 1,
-  updateAct: (act) => set({ currentAct: act }),
-}));
+const useTimelineStore = create(
+  devtools<TimelineStore>((set) => ({
+    currentAct: 1,
+    updateAct: (act) => set({ currentAct: act }),
+  })),
+);
 
 export { useTimelineStore };

@@ -17,7 +17,7 @@ const ThirdAct = () => {
   return (
     <>
       <div
-        className="row-span-5 w-full bg-background text-center"
+        className="row-span-5 w-full bg-background/60 text-center backdrop-blur-xl"
         ref={sectionRef}
       ></div>
     </>

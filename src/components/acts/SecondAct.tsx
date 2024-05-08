@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, SearchIcon } from 'lucide-react';
 
 import { useContinentStore } from '@/store/continent';
 import { useTimelineStore } from '@/store/timeline';
+import { Link } from 'react-router-dom';
 
 const SecondAct = () => {
   const nextContinent = useContinentStore((state) => state.nextContinent);
@@ -30,12 +31,14 @@ const SecondAct = () => {
         </Button>
       </div>
       <div className="row-start-3 place-self-center">
-        <Button
-          className="border-none bg-background/40 text-background backdrop-blur-sm"
-          onClick={() => updateAct(3)}
-        >
-          <SearchIcon />
-        </Button>
+        <Link to="/venues">
+          <Button
+            className="border-none bg-background/40 text-background backdrop-blur-sm"
+            onClick={() => updateAct(3)}
+          >
+            <SearchIcon />
+          </Button>
+        </Link>
       </div>
     </>
   );
