@@ -129,7 +129,7 @@ const Earth = () => {
     tl.to(
       camera.position,
       {
-        z: 8,
+        z: 4,
       },
       '<',
     );

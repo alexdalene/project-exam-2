@@ -76,7 +76,10 @@ const Navbar = () => {
         <div className="right-0 flex md:absolute md:pr-8">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="gap-2 px-0">
+              <Button
+                variant="ghost"
+                className="gap-2 px-0 hover:bg-transparent"
+              >
                 <ChevronDownIcon size={20} />
                 <Avatar>
                   <AvatarImage src="" />
