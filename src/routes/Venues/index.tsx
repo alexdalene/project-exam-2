@@ -7,6 +7,8 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
+import Search from '@/components/Search';
+
 const Venues = () => {
   const isLoading = useLoadingStore((state) => state.isLoading);
   const updateAct = useTimelineStore((state) => state.updateAct);
@@ -34,17 +36,31 @@ const Venues = () => {
   console.log(venues);
 
   return (
-    <section
-      className="row-span-5 min-h-dvh w-full bg-background"
-      ref={sectionRef}
-    >
-      <div className="mx-auto max-w-[1100px] px-4 py-28">
-        <h1 className="mb-2 text-xl uppercase">Venues</h1>
-        <p className="max-w-[30ch] font-medium text-muted">
-          Look through hundreds of venues from all over the world.
-        </p>
-      </div>
-    </section>
+    <>
+      <section
+        className="min-h-dvh w-full bg-background pt-20"
+        ref={sectionRef}
+      >
+        <div className="max-w-[1100px] px-4 py-16">
+          <h1 className="mb-2 text-xl uppercase">Venues</h1>
+          <p className="max-w-[30ch] font-medium text-muted">
+            Look through hundreds of venues from all over the world.
+          </p>
+        </div>
+
+        <Search />
+
+        <div className="mx-auto grid max-w-[1100px] grid-cols-1 gap-4 px-4 md:grid-cols-3">
+          {venues.map((venue) => {
+            return (
+              <div key={venue.id}>
+                <img src={venue.media[0]?.url} alt={venue.media[0]?.alt} />
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </>
   );
 };
 
