@@ -7,6 +7,7 @@ import Venues from './routes/Venues';
 import Root from './routes/root';
 import './index.css';
 import ErrorPage from './ErrorPage';
+import Venue from './routes/Venues/Venue';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: '/venues',
         element: <Venues />,
+      },
+      {
+        path: '/venues/:id',
+        element: <Venue />,
       },
     ],
   },
