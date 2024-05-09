@@ -1,5 +1,3 @@
-import { useLoadingStore } from '@/store/loading';
-import { useTimelineStore } from '@/store/timeline';
 import { useVenueStore } from '@/store/venues';
 import { useSearchStore } from '@/store/search';
 
@@ -12,8 +10,6 @@ import Search from '@/components/Search';
 import VenueGrid from '@/components/venue/VenueGrid';
 
 const Venues = () => {
-  const isLoading = useLoadingStore((state) => state.isLoading);
-  const updateAct = useTimelineStore((state) => state.updateAct);
   const fetchVenues = useVenueStore((state) => state.fetchVenues);
   const venues = useVenueStore((state) => state.venues);
   const view = useSearchStore((state) => state.view);
@@ -30,11 +26,8 @@ const Venues = () => {
   });
 
   useEffect(() => {
-    if (!isLoading) {
-      updateAct(3);
-      fetchVenues();
-    }
-  }, [isLoading, updateAct, fetchVenues]);
+    fetchVenues();
+  }, [fetchVenues]);
 
   return (
     <>

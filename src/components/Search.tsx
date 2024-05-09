@@ -3,7 +3,11 @@ import { Input } from '@/components/ui/input';
 import { Grid2X2, List } from 'lucide-react';
 import { useSearchStore } from '@/store/search';
 
+import { useState } from 'react';
+
 const Search = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const { search, view, setSearch, setView } = useSearchStore((state) => ({
     search: state.search,
     view: state.view,
@@ -21,23 +25,37 @@ const Search = () => {
       <Input
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search"
-        className="h-full max-w-[600px] rounded-2xl border-none bg-accent text-base font-medium placeholder:font-medium placeholder:text-muted focus-visible:bg-popover focus-visible:ring-1 focus-visible:ring-stone-200"
+        onFocus={() => setIsOpen(true)}
+        onBlur={() => setIsOpen(false)}
+        placeholder="Search for a venue..."
+        className="h-full max-w-[600px] rounded-2xl border-none bg-accent text-base font-medium placeholder:font-medium placeholder:text-muted focus-visible:bg-popover focus-visible:ring-1 focus-visible:ring-muted-foreground"
       />
+
       <div className="flex gap-2">
-        {views.map((v) => (
+        {!isOpen ? (
+          views.map((v) => (
+            <Button
+              key={v}
+              aria-label={v + ' view'}
+              variant="secondary"
+              size="icon"
+              onClick={() => setView(v)}
+              type="button"
+              className={view === v ? 'text-foreground' : 'text-muted'}
+            >
+              {v === 'grid' ? <Grid2X2 /> : <List />}
+            </Button>
+          ))
+        ) : (
           <Button
-            key={v}
-            aria-label={v + ' view'}
-            variant="secondary"
-            size="icon"
-            onClick={() => setView(v)}
+            variant="link"
+            onClick={() => setIsOpen(false)}
             type="button"
-            className={view === v ? 'text-foreground' : 'text-muted'}
+            className="px-2 text-blue-500"
           >
-            {v === 'grid' ? <Grid2X2 /> : <List />}
+            Cancel
           </Button>
-        ))}
+        )}
       </div>
     </form>
   );
