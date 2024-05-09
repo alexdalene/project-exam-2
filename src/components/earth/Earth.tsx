@@ -32,11 +32,9 @@ const Earth = () => {
   const atmosphereRef = useRef<Mesh>(null!);
   const groupRef = useRef<THREE.Group>(null!);
   const sunRef = useRef<Mesh>(null!);
-  // const yPosition = useRef(0);
   const earthMaterial = useRef<THREE.ShaderMaterial>(null!);
   const atmosphereMaterial = useRef<THREE.ShaderMaterial>(null!);
   const masterTimelineRef = useRef<gsap.core.Timeline>();
-  const mouse = useRef({ x: 0, y: 0 });
 
   /**
    * Store
@@ -157,22 +155,27 @@ const Earth = () => {
       if (currentAct === 3) {
         master.tweenTo(3);
       }
+
+      return () => {
+        master.restart();
+      };
     },
     { dependencies: [currentAct] },
   );
 
-  useGSAP(
-    () => {
-      if (currentAct === 2) {
-        gsap.to(groupRef.current.rotation, {
-          x: continent.position.x,
-          y: continent.position.y,
-          z: continent.position.z,
-        });
-      }
-    },
-    { dependencies: [continent] },
-  );
+  // useGSAP(
+  //   () => {
+  //     if (currentAct === 2) {
+  //       gsap.to(groupRef.current.rotation, {
+  //         x: continent.position.x,
+  //         y: continent.position.y,
+  //         z: continent.position.z,
+  //         duration: 1.5,
+  //       });
+  //     }
+  //   },
+  //   { dependencies: [continent] },
+  // );
 
   useGSAP(
     () => {
@@ -181,16 +184,6 @@ const Earth = () => {
       }
     },
     { dependencies: [progress] },
-  );
-
-  useGSAP(
-    () => {
-      gsap.to(camera.position, {
-        x: mouse.current.x * 0.01,
-        y: mouse.current.y * 0.01,
-      });
-    },
-    { dependencies: [mouse] },
   );
 
   /**

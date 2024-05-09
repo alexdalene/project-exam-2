@@ -74,7 +74,7 @@ const Navbar = () => {
                   );
                 })}
               </ul>
-              <hr className="border-black/5" />
+              <hr className="border-muted-foreground" />
               <ul className="flex flex-col items-start gap-4">
                 <li>
                   <Link to="/account">Account</Link>
@@ -85,7 +85,7 @@ const Navbar = () => {
                   </Link>
                 </li>
               </ul>
-              <hr className="border-black/5" />
+              <hr className="border-muted-foreground" />
               <SheetFooter>© 2024 Holidaze. All rights reserved.</SheetFooter>
             </SheetHeader>
           </SheetContent>
