@@ -12,6 +12,7 @@ type Venue = {
   location: VenueLocation;
   owner: VenueUser;
   bookings: VenueBookings[];
+  _count: { bookings: number };
 };
 
 type VenueLocation = {
