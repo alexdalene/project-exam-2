@@ -45,8 +45,6 @@ const Earth = () => {
   const updateAct = useTimelineStore((state) => state.updateAct);
   const continent = useContinentStore((state) => state.continent);
 
-  console.log(continent);
-
   /**
    * GSAP
    */
