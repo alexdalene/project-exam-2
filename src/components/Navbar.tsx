@@ -8,10 +8,9 @@ import {
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
+  SheetFooter,
 } from '@/components/ui/sheet';
 import {
   DropdownMenu,
@@ -22,9 +21,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-// import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronDownIcon, LogIn, MenuIcon, User } from 'lucide-react';
+import { ChevronDownIcon, MenuIcon, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
@@ -65,11 +63,30 @@ const Navbar = () => {
           </SheetTrigger>
           <SheetContent side="left">
             <SheetHeader>
-              <SheetTitle>Are you absolutely sure?</SheetTitle>
-              <SheetDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </SheetDescription>
+              <ul className="flex flex-col items-start gap-4">
+                {links.map((link) => {
+                  return (
+                    <li key={link.name}>
+                      <Link to={link.path} className="">
+                        {link.name}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+              <hr className="border-black/5" />
+              <ul className="flex flex-col items-start gap-4">
+                <li>
+                  <Link to="/account">Account</Link>
+                </li>
+                <li>
+                  <Link to="/auth" className="text-red-500">
+                    Log out
+                  </Link>
+                </li>
+              </ul>
+              <hr className="border-black/5" />
+              <SheetFooter>© 2024 Holidaze. All rights reserved.</SheetFooter>
             </SheetHeader>
           </SheetContent>
         </Sheet>
@@ -89,12 +106,8 @@ const Navbar = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem>
-                <LogIn size={16} />
-                Login
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <User size={16} /> Sign up
+                <User size={16} />
+                Account
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-red-500">
