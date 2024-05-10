@@ -1,14 +1,13 @@
 import { useTimelineStore } from '@/store/timeline';
 import { useLoadingStore } from '@/store/loading';
 
-import { useEffect, useState } from 'react';
-
+import EarthContainer from '@/components/earth/EarthContainer';
 import FirstAct from '@/components/acts/FirstAct';
 import SecondAct from '@/components/acts/SecondAct';
 import ThirdAct from '@/components/acts/ThirdAct';
 import Loading from '@/components/Loading';
 
-import EarthContainer from '@/components/earth/EarthContainer';
+import { useEffect, useState } from 'react';
 import { Leva } from 'leva';
 
 const App = () => {

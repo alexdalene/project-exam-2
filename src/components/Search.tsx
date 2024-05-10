@@ -1,19 +1,26 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Grid2X2, List } from 'lucide-react';
 import { useSearchStore } from '@/store/search';
 
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+import { useState, useEffect } from 'react';
+import { Grid2X2, List } from 'lucide-react';
+import { useDebounce } from 'use-debounce';
 
 const Search = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [debouncedValue] = useDebounce(inputValue, 500);
 
-  const { search, view, setSearch, setView } = useSearchStore((state) => ({
-    search: state.search,
+  const { view, setSearch, setView } = useSearchStore((state) => ({
     view: state.view,
     setSearch: state.setSearch,
     setView: state.setView,
   }));
+
+  useEffect(() => {
+    setSearch(debouncedValue);
+  }, [debouncedValue]);
 
   const views = ['grid', 'list'];
 
@@ -23,12 +30,12 @@ const Search = () => {
       onSubmit={(e) => e.preventDefault()}
     >
       <Input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
         onFocus={() => setIsOpen(true)}
         onBlur={() => setIsOpen(false)}
         placeholder="Search for a venue..."
-        className="h-full max-w-[600px] rounded-2xl border-none bg-accent text-base font-medium placeholder:font-medium placeholder:text-muted focus-visible:bg-popover focus-visible:ring-1 focus-visible:ring-muted-foreground"
+        className="h-full max-w-[600px] rounded-2xl border-none bg-accent text-base placeholder:text-muted focus-visible:bg-popover focus-visible:ring-1 focus-visible:ring-muted-foreground focus-visible:ring-offset-0"
       />
 
       <div className="flex gap-2">
