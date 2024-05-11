@@ -1,12 +1,22 @@
+import { useTimelineStore } from '@/store/timeline';
+
 import { Button } from '@/components/ui/button';
 
 import { Html } from '@react-three/drei';
 import { Plus, User, Search } from 'lucide-react';
-
-import { useTimelineStore } from '@/store/timeline';
+import { useEffect } from 'react';
 
 const EarthMenu = () => {
   const isActFinished = useTimelineStore((state) => state.isActFinished);
+  const toggleActFinished = useTimelineStore(
+    (state) => state.toggleActFinished,
+  );
+
+  useEffect(() => {
+    return () => {
+      toggleActFinished();
+    };
+  }, []);
 
   const buttons = [
     {
