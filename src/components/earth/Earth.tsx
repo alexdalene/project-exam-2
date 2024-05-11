@@ -1,7 +1,7 @@
 // Three
 import * as THREE from 'three';
 import { Mesh } from 'three';
-import { useTexture, useProgress, OrbitControls } from '@react-three/drei';
+import { useTexture, OrbitControls } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useControls } from 'leva';
 
@@ -11,10 +11,10 @@ import { useRef, useMemo, useCallback } from 'react';
 // GSAP
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Store
 import { useTimelineStore } from '@/store/timeline';
-import { useContinentStore } from '@/store/continent';
 
 // Earth shaders
 import earthVertexShader from '@/assets/earth/shaders/vertex.glsl';
@@ -23,6 +23,9 @@ import earthFragmentShader from '@/assets/earth/shaders/fragment.glsl';
 // Atmosphere shaders
 import atmosphereVertexShader from '@/assets/atmosphere/shaders/vertex.glsl';
 import atmosphereFragmentShader from '@/assets/atmosphere/shaders/fragment.glsl';
+
+// Components
+import EarthMenu from './EarthMenu';
 
 const Earth = () => {
   /**
@@ -41,14 +44,16 @@ const Earth = () => {
    */
   const currentAct = useTimelineStore((state) => state.currentAct);
   const updateAct = useTimelineStore((state) => state.updateAct);
-  const continent = useContinentStore((state) => state.continent);
+  const toggleActFinished = useTimelineStore(
+    (state) => state.toggleActFinished,
+  );
 
   /**
    * GSAP
    */
   gsap.registerPlugin(useGSAP);
+  gsap.registerPlugin(ScrollTrigger);
 
-  const { progress } = useProgress();
   const { camera } = useThree();
   const { contextSafe } = useGSAP();
 
@@ -56,39 +61,18 @@ const Earth = () => {
    * Timeline
    */
 
-  // Act intro
-  const actIntro = contextSafe(() => {
-    const tl = gsap.timeline({
-      defaults: { duration: 1.5, ease: 'power2.inOut' },
-    });
-
-    tl.from(sunSpherical, {
-      delay: 1,
-      theta: -3,
-      onUpdate: updateSun,
-    });
-  });
-
   // Act two
   const actTwo = contextSafe(() => {
     const tl = gsap.timeline({
-      defaults: { duration: 1.5, ease: 'expo.inOut' },
+      defaults: { duration: 1.5, ease: 'power2.inOut' },
+      onComplete: () => toggleActFinished(),
     });
-
-    tl.to(
-      groupRef.current.position,
-      {
-        y: 0,
-      },
-      '<',
-    );
 
     tl.to(
       groupRef.current.rotation,
       {
-        x: continent.position.x,
-        y: continent.position.y,
-        z: continent.position.z,
+        y: -Math.PI * 2,
+        z: -Math.PI * 0.5,
       },
       '<',
     );
@@ -136,7 +120,14 @@ const Earth = () => {
   useGSAP(
     () => {
       if (!masterTimelineRef.current) {
-        masterTimelineRef.current = gsap.timeline({ paused: true });
+        masterTimelineRef.current = gsap.timeline({
+          scrollTrigger: {
+            trigger: 'body',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
       }
 
       const master = masterTimelineRef.current;
@@ -157,33 +148,10 @@ const Earth = () => {
       }
 
       return () => {
-        master.restart();
+        master.kill();
       };
     },
     { dependencies: [currentAct] },
-  );
-
-  // useGSAP(
-  //   () => {
-  //     if (currentAct === 2) {
-  //       gsap.to(groupRef.current.rotation, {
-  //         x: continent.position.x,
-  //         y: continent.position.y,
-  //         z: continent.position.z,
-  //         duration: 1.5,
-  //       });
-  //     }
-  //   },
-  //   { dependencies: [continent] },
-  // );
-
-  useGSAP(
-    () => {
-      if (progress === 100) {
-        actIntro();
-      }
-    },
-    { dependencies: [progress] },
   );
 
   /**
@@ -195,13 +163,13 @@ const Earth = () => {
     '/textures/specularClouds.jpg',
   ]);
 
-  dayTexture.anisotropy = 8;
+  dayTexture.anisotropy = 4;
   dayTexture.colorSpace = THREE.SRGBColorSpace;
 
-  nightTexture.anisotropy = 8;
+  nightTexture.anisotropy = 4;
   nightTexture.colorSpace = THREE.SRGBColorSpace;
 
-  specularCloudsTexture.anisotropy = 8;
+  specularCloudsTexture.anisotropy = 4;
 
   // Update texture anisotropy
   // const updateTextureAnisotropy = useCallback(() => {
@@ -244,6 +212,17 @@ const Earth = () => {
     if (currentAct === 1) {
       groupRef.current.rotation.y -= delta * 0.05;
       groupRef.current.rotation.x += delta * 0.05;
+    }
+
+    if (currentAct === 2) {
+      const time = performance.now() * 0.001; // get time in seconds
+      const oscillation = Math.sin(time); // oscillates between -1 and 1
+
+      groupRef.current.rotation.y -=
+        delta * Math.cos(sunSpherical.theta) * oscillation * 0.08;
+      groupRef.current.rotation.x +=
+        delta * Math.sin(sunSpherical.theta) * oscillation * 0.08;
+      groupRef.current.position.y = oscillation * 0.1;
     }
   });
 
@@ -293,29 +272,25 @@ const Earth = () => {
 
   // Earth position
   const { position } = useControls('Earth', {
-    position: { value: [0, 0.5, 0] },
+    position: { value: { x: -0, y: 0 }, step: 0.01, joystick: 'invertY' },
   });
 
   // Earth rotation
   const { rotation } = useControls('Earth', {
-    rotation: { value: [0, 0, 0] },
+    rotation: { value: { x: 0, y: 0, z: 0 }, step: 0.01 },
   });
-
-  // useEffect(() => {
-  //   // // Calculate the y position based on the camera's field of view and the distance of the planet from the camera
-  //   // const distance = camera.position.z;
-  //   // yPosition.current =
-  //   //   Math.tan(
-  //   //     ((camera as THREE.PerspectiveCamera).fov / 2) * (Math.PI / 180),
-  //   //   ) * distance;
-  //   // updateSun();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   return (
     <>
       {enableControls && <OrbitControls />}
-      <group position={position} ref={groupRef} rotation={rotation}>
+
+      <group
+        position={[position.x, position.y, 0]}
+        ref={groupRef}
+        rotation={[rotation.x, rotation.y, rotation.z]}
+      >
+        {currentAct === 2 && <EarthMenu />}
+
         {/* Earth */}
         <mesh ref={earthRef}>
           <sphereGeometry args={[2, 64, 64]} />

@@ -7,6 +7,8 @@ import { devtools } from 'zustand/middleware';
 type TimelineStore = {
   currentAct: number;
   updateAct: (act: number) => void;
+  isActFinished: boolean;
+  toggleActFinished: () => void;
 };
 
 /**
@@ -17,6 +19,9 @@ const useTimelineStore = create(
   devtools<TimelineStore>((set) => ({
     currentAct: 1,
     updateAct: (act) => set({ currentAct: act }),
+    isActFinished: false,
+    toggleActFinished: () =>
+      set((state) => ({ isActFinished: !state.isActFinished })),
   })),
 );
 

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import App from './routes/App';
+import Hero from './routes/Hero';
 import Venues from './routes/Venues';
 import Root from './routes/root';
 import './index.css';
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <App />,
+        element: <Hero />,
       },
       {
         path: '/venues',

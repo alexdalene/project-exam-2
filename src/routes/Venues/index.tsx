@@ -1,13 +1,12 @@
 import { useVenueStore } from '@/store/venues';
 import { useSearchStore } from '@/store/search';
 
-import { useEffect, useRef } from 'react';
-
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-
 import Search from '@/components/Search';
 import VenueGrid from '@/components/venue/VenueGrid';
+
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const Venues = () => {
   const fetchVenues = useVenueStore((state) => state.fetchVenues);

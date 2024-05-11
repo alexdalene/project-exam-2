@@ -7,7 +7,7 @@ const FirstAct = () => {
   const updateAct = useTimelineStore((state) => state.updateAct);
 
   return (
-    <>
+    <section className="grid min-h-[inherit] grid-rows-5">
       <div className="row-start-4 place-self-center text-center">
         <h1 className="mb-2 text-2xl uppercase">Holidaze</h1>
         <p className="max-w-[24ch] text-lg font-medium text-muted">
@@ -19,7 +19,7 @@ const FirstAct = () => {
           Begin <ArrowRight size={14} />
         </Button>
       </div>
-    </>
+    </section>
   );
 };
 

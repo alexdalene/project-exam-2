@@ -20,7 +20,7 @@ const buttonVariants = cva(
         primary:
           'w-fit bg-transparent font-normal border border-foreground text-foreground gap-2',
         glass:
-          'gap-2 border border-black/5 bg-gradient-to-br from-stone-100/5 to-stone-200/20 font-medium shadow-inner shadow-white/10 backdrop-blur-xl',
+          'gap-2 border border-black/5 bg-gradient-to-br from-stone-100/5 to-stone-200/20 font-medium shadow-inner shadow-white/40 backdrop-blur-xl',
       },
       size: {
         default: 'h-10 px-4 py-2 rounded-2xl',
