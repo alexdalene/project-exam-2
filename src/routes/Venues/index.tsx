@@ -15,6 +15,8 @@ const Venues = () => {
 
   const sectionRef = useRef<HTMLDivElement>(null!);
 
+  gsap.registerPlugin(useGSAP);
+
   useGSAP(() => {
     gsap.from(sectionRef.current, {
       duration: 1,

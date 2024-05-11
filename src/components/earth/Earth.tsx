@@ -6,7 +6,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useControls } from 'leva';
 
 // React
-import { useRef, useMemo, useCallback } from 'react';
+import { useRef, useMemo, useCallback, useEffect } from 'react';
 
 // GSAP
 import gsap from 'gsap';
@@ -15,6 +15,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Store
 import { useTimelineStore } from '@/store/timeline';
+import { useLoadingStore } from '@/store/loading';
 
 // Earth shaders
 import earthVertexShader from '@/assets/earth/shaders/vertex.glsl';
@@ -47,6 +48,7 @@ const Earth = () => {
   const toggleActFinished = useTimelineStore(
     (state) => state.toggleActFinished,
   );
+  const isLoading = useLoadingStore((state) => state.isLoading);
 
   /**
    * GSAP
@@ -60,6 +62,22 @@ const Earth = () => {
   /**
    * Timeline
    */
+
+  // Intro
+  const intro = contextSafe(() => {
+    gsap.to(groupRef.current.position, {
+      y: 0,
+      duration: 1.5,
+      ease: 'expo.out',
+    });
+  });
+
+  useEffect(() => {
+    if (!isLoading) {
+      intro();
+      updateSun();
+    }
+  }, [isLoading]);
 
   // Act two
   const actTwo = contextSafe(() => {
@@ -120,14 +138,7 @@ const Earth = () => {
   useGSAP(
     () => {
       if (!masterTimelineRef.current) {
-        masterTimelineRef.current = gsap.timeline({
-          scrollTrigger: {
-            trigger: 'body',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        });
+        masterTimelineRef.current = gsap.timeline({ paused: true });
       }
 
       const master = masterTimelineRef.current;
@@ -146,10 +157,6 @@ const Earth = () => {
       if (currentAct === 3) {
         master.tweenTo(3);
       }
-
-      return () => {
-        master.kill();
-      };
     },
     { dependencies: [currentAct] },
   );
@@ -272,7 +279,7 @@ const Earth = () => {
 
   // Earth position
   const { position } = useControls('Earth', {
-    position: { value: { x: -0, y: 0 }, step: 0.01, joystick: 'invertY' },
+    position: { value: { x: -0, y: -12 }, step: 0.01, joystick: 'invertY' },
   });
 
   // Earth rotation
@@ -282,7 +289,7 @@ const Earth = () => {
 
   return (
     <>
-      {enableControls && <OrbitControls />}
+      {(enableControls || currentAct === 2) && <OrbitControls />}
 
       <group
         position={[position.x, position.y, 0]}
