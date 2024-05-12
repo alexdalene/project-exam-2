@@ -17,7 +17,7 @@ const Root = () => {
     <>
       <Navbar />
 
-      <main className="min-h-dvh overflow-hidden">
+      <main className="min-h-dvh">
         <Outlet />
       </main>
 

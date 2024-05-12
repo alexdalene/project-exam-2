@@ -30,14 +30,14 @@ const FirstAct = () => {
 
   return (
     <section className="grid min-h-[inherit] grid-rows-5" ref={sectionRef}>
-      <div className="row-start-4 place-self-center text-center">
+      <div className="row-start-4 max-w-[350px] place-self-center text-center">
         <h1 className="mb-2 text-2xl uppercase">Holidaze</h1>
-        <p className="max-w-[24ch] text-lg font-medium text-muted">
+        <p className="text-balance text-muted-foreground">
           A new and innovative way to explore and create venues.
         </p>
       </div>
       <div className="row-start-5 self-start justify-self-center">
-        <Button variant="glass" onClick={() => animateOut()}>
+        <Button onClick={() => animateOut()}>
           <ArrowRight size={20} />
           Begin
         </Button>

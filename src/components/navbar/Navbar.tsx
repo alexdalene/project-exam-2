@@ -8,44 +8,45 @@ import {
 import NavbarMenu from '@/components/navbar/NavbarMenu';
 import NavbarUser from '@/components/navbar/NavbarUser';
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
-  const links = [
+  const links: { name: string; path: string }[] = [
     { name: 'Home', path: '/' },
     { name: 'Venues', path: '/venues' },
     { name: 'Account', path: '/account' },
     { name: 'Contact', path: '/contact' },
   ];
 
+  const location = useLocation();
+
   return (
     <NavigationMenu>
-      <div className="mx-auto mt-3 flex w-full max-w-[1100px] flex-1 list-none items-center justify-between rounded-2xl border border-black/5 bg-gradient-to-tr from-stone-100/5 to-stone-200/20 px-4 py-3 backdrop-blur-xl md:justify-center">
-        <Link
-          to="/"
-          className="absolute left-0 hidden pl-8 text-sm font-semibold uppercase md:inline"
-        >
-          Holidaze
-        </Link>
+      <NavbarMenu links={links} />
 
-        <NavbarMenu links={links} />
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <Link to="/" className="font-semibold uppercase">
+            Holidaze
+          </Link>
+        </NavigationMenuItem>
 
-        <NavigationMenuList className="hidden space-x-1 md:flex">
-          {links.map((link) => {
-            return (
-              <NavigationMenuItem key={link.name}>
-                <NavigationMenuLink asChild>
-                  <Link to={link.path} className={navigationMenuTriggerStyle()}>
-                    {link.name}
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            );
-          })}
-        </NavigationMenuList>
+        {links.map((link) => {
+          const isActive = location.pathname === link.path;
 
-        <NavbarUser />
-      </div>
+          return (
+            <NavigationMenuItem key={link.name} className="h-full">
+              <NavigationMenuLink asChild active={isActive}>
+                <Link to={link.path} className={navigationMenuTriggerStyle()}>
+                  {link.name}
+                </Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          );
+        })}
+      </NavigationMenuList>
+
+      <NavbarUser />
     </NavigationMenu>
   );
 };
