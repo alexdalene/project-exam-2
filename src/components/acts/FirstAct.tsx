@@ -37,7 +37,7 @@ const FirstAct = () => {
         </p>
       </div>
       <div className="row-start-5 self-start justify-self-center">
-        <Button variant="glass" onClick={() => animateOut()}>
+        <Button onClick={() => animateOut()}>
           <ArrowRight size={20} />
           Begin
         </Button>
