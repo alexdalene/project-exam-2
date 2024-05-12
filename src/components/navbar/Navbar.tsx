@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import NavbarMenu from '@/components/navbar/NavbarMenu';
 import NavbarUser from '@/components/navbar/NavbarUser';
+
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
@@ -19,7 +20,7 @@ const Navbar = () => {
 
   return (
     <NavigationMenu>
-      <NavigationMenuList>
+      <div className="mx-auto mt-3 flex w-full max-w-[1100px] flex-1 list-none items-center justify-between rounded-2xl border border-black/5 bg-gradient-to-tr from-stone-100/5 to-stone-200/20 px-4 py-3 backdrop-blur-xl md:justify-center">
         <Link
           to="/"
           className="absolute left-0 hidden pl-8 text-sm font-semibold uppercase md:inline"
@@ -27,7 +28,9 @@ const Navbar = () => {
           Holidaze
         </Link>
 
-        <div className="hidden space-x-1 md:flex">
+        <NavbarMenu links={links} />
+
+        <NavigationMenuList className="hidden space-x-1 md:flex">
           {links.map((link) => {
             return (
               <NavigationMenuItem key={link.name}>
@@ -39,12 +42,10 @@ const Navbar = () => {
               </NavigationMenuItem>
             );
           })}
-        </div>
-
-        <NavbarMenu links={links} />
+        </NavigationMenuList>
 
         <NavbarUser />
-      </NavigationMenuList>
+      </div>
     </NavigationMenu>
   );
 };

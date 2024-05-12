@@ -53,6 +53,7 @@ const EarthMenu = () => {
         }}
         className="flex w-40 list-none flex-col overflow-hidden rounded-xl border border-black/5 bg-gradient-to-br from-stone-100/5 to-stone-200/20 shadow-inner shadow-white/40 backdrop-blur-xl"
         as="ul"
+        center
       >
         {buttons.map((button, index) => (
           <Button
