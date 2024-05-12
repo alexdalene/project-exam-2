@@ -15,7 +15,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Store
 import { useTimelineStore } from '@/store/timeline';
-import { useLoadingStore } from '@/store/loading';
 
 // Earth shaders
 import earthVertexShader from '@/assets/earth/shaders/vertex.glsl';
@@ -48,7 +47,6 @@ const Earth = () => {
   const toggleActFinished = useTimelineStore(
     (state) => state.toggleActFinished,
   );
-  const isLoading = useLoadingStore((state) => state.isLoading);
 
   /**
    * GSAP
@@ -62,22 +60,6 @@ const Earth = () => {
   /**
    * Timeline
    */
-
-  // Intro
-  const intro = contextSafe(() => {
-    gsap.to(groupRef.current.position, {
-      y: 0,
-      duration: 1.5,
-      ease: 'expo.out',
-    });
-  });
-
-  useEffect(() => {
-    if (!isLoading) {
-      intro();
-      updateSun();
-    }
-  }, [isLoading]);
 
   // Act two
   const actTwo = contextSafe(() => {
@@ -106,6 +88,7 @@ const Earth = () => {
     tl.to(
       sunSpherical,
       {
+        phi: 1.3,
         theta: 0.7,
         onUpdate: updateSun,
       },
@@ -178,14 +161,6 @@ const Earth = () => {
 
   specularCloudsTexture.anisotropy = 4;
 
-  // Update texture anisotropy
-  // const updateTextureAnisotropy = useCallback(() => {
-  //   console.log('updateTextureAnisotropy');
-  //   dayTexture.anisotropy = 1;
-  //   nightTexture.anisotropy = 1;
-  //   specularCloudsTexture.anisotropy = 1;
-  // }, [dayTexture, nightTexture, specularCloudsTexture]);
-
   /**
    * Earth
    */
@@ -211,6 +186,10 @@ const Earth = () => {
     earthMaterial.current.uniforms.uSunDirection.value = sunDirection;
     atmosphereMaterial.current.uniforms.uSunDirection.value = sunDirection;
   }, [sunSpherical, sunDirection]);
+
+  useEffect(() => {
+    updateSun();
+  }, []);
 
   /**
    * Animate
@@ -279,7 +258,7 @@ const Earth = () => {
 
   // Earth position
   const { position } = useControls('Earth', {
-    position: { value: { x: -0, y: -12 }, step: 0.01, joystick: 'invertY' },
+    position: { value: { x: -0, y: 0 }, step: 0.01, joystick: 'invertY' },
   });
 
   // Earth rotation

@@ -11,10 +11,7 @@ const NavigationMenu = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
     ref={ref}
-    className={cn(
-      'fixed top-0 z-10 flex w-full flex-col justify-end px-4 md:justify-stretch',
-      className,
-    )}
+    className={cn('fixed top-0 z-10 w-full px-4', className)}
     {...props}
   >
     {children}
@@ -29,10 +26,7 @@ const NavigationMenuList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <NavigationMenuPrimitive.List
     ref={ref}
-    className={cn(
-      'group mx-auto mt-3 flex w-full max-w-[1100px] flex-1 list-none items-center justify-between rounded-2xl border border-black/5 bg-gradient-to-tr from-stone-100/5 to-stone-200/20 px-4 py-3 backdrop-blur-xl md:justify-center',
-      className,
-    )}
+    className={cn('group', className)}
     {...props}
   />
 ));
