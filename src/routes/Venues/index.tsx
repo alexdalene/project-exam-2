@@ -96,8 +96,8 @@ const VenuePanel = ({ venues }: { venues: Venue[] }) => {
 const Venues = () => {
   const fetchVenues = useVenueStore((state) => state.fetchVenues);
   const venues = useVenueStore((state) => state.venues);
-  const sidebarRef = useRef(null);
-  const venueRef = useRef(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sidebarRef = useRef<any>();
 
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -157,7 +157,6 @@ const Venues = () => {
           minSize={50}
           defaultSize={70}
           collapsible
-          ref={venueRef}
         >
           <VenuePanel venues={venues} />
 
