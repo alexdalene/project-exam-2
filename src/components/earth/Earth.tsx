@@ -44,9 +44,6 @@ const Earth = () => {
    */
   const currentAct = useTimelineStore((state) => state.currentAct);
   const updateAct = useTimelineStore((state) => state.updateAct);
-  const toggleActFinished = useTimelineStore(
-    (state) => state.toggleActFinished,
-  );
 
   /**
    * GSAP
@@ -64,14 +61,14 @@ const Earth = () => {
   // Act two
   const actTwo = contextSafe(() => {
     const tl = gsap.timeline({
-      defaults: { duration: 1.5, ease: 'power2.inOut' },
-      onComplete: () => toggleActFinished(),
+      defaults: { duration: 1.5, ease: 'none' },
+      onComplete: () => console.log('Act two completed'),
     });
 
     tl.to(
       groupRef.current.rotation,
       {
-        y: -Math.PI * 2,
+        y: -Math.PI * 1,
         z: -Math.PI * 0.5,
       },
       '<',
@@ -103,13 +100,14 @@ const Earth = () => {
     const tl = gsap.timeline({
       defaults: {
         duration: 1.5,
-        ease: 'power2.inOut',
+        ease: 'none',
       },
     });
 
     tl.to(
       camera.position,
       {
+        y: 2,
         z: 4,
       },
       '<',
@@ -121,7 +119,14 @@ const Earth = () => {
   useGSAP(
     () => {
       if (!masterTimelineRef.current) {
-        masterTimelineRef.current = gsap.timeline({ paused: true });
+        masterTimelineRef.current = gsap.timeline({
+          scrollTrigger: {
+            trigger: 'body',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
       }
 
       const master = masterTimelineRef.current;

@@ -17,9 +17,7 @@ const Root = () => {
     <>
       <Navbar />
 
-      <main className="min-h-dvh">
-        <Outlet />
-      </main>
+      <Outlet />
 
       <Leva hidden={hash} collapsed />
     </>

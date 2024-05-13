@@ -75,12 +75,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased;
-  }
-  .hover-slide-right-dark {
-    @apply relative overflow-hidden before:absolute before:bottom-0 before:left-0 before:top-0 before:-z-10 before:h-full before:w-0 before:bg-foreground before:transition-all hover:text-background hover:before:w-full;
-  }
-  .hover-slide-left-dark {
-    @apply relative overflow-hidden before:absolute before:bottom-0 before:right-0 before:top-0 before:-z-10 before:h-full before:w-0 before:bg-foreground before:transition-all hover:text-background hover:before:w-full;
+    @apply h-auto bg-background font-sans text-foreground antialiased;
   }
 }
