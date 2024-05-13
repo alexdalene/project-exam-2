@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Venue } from '@/types/venue';
-import { Circle, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -23,34 +23,33 @@ const VenueGrid = (venue: Venue) => {
   return (
     <>
       {isLoading ? (
-        <div className="flex h-fit w-full flex-col bg-background">
+        <div className="flex h-fit w-full flex-col bg-background px-3 py-2">
           <Skeleton className="aspect-square h-full w-full object-cover" />
-          <div className="px-4 md:px-0">
+          <div>
             <Skeleton className="mb-1 mt-4 h-[24px] w-[250px]" />
             <Skeleton className="mb-2 h-[20px] w-[150px]" />
-            <Skeleton className="h-[20px] w-[70px]" />
             <Skeleton className="mt-4 h-[20px] w-[100px]" />
           </div>
         </div>
       ) : (
         <Link to={`/venues/${venue.id}`}>
-          <article className="h-fit w-full bg-background">
+          <article className="h-fit w-full overflow-hidden rounded-md bg-background px-3 pb-8 pt-2 focus:bg-accent md:hover:bg-accent">
             <img
               src={venue.media[0]?.url}
               alt={venue.media[0]?.alt}
-              className="aspect-square h-full w-full object-cover"
+              className="aspect-square h-full w-full rounded-md object-cover"
               loading="lazy"
             />
-
-            <header className="mt-4 h-full px-4 md:px-0">
-              <h2 className="mb-1 truncate text-xl font-medium">
-                {venue.name}
-              </h2>
-              <p className="mb-2 truncate text-sm">
-                {venue.location.city + ', ' + venue.location.country}
-              </p>
-              <div className="flex items-center gap-2">
+            <header className="mt-2 flex h-full w-full items-start justify-between overflow-hidden">
+              <div className="w-full">
+                <h2 className="mb-1 line-clamp-2 font-medium">{venue.name}</h2>
+                <p className="truncate text-sm text-muted-foreground">
+                  {venue.location.city + ', ' + venue.location.country}
+                </p>
+              </div>
+              <div className="flex items-center gap-1">
                 <Star
+                  size={20}
                   strokeWidth={0}
                   fill="#292524"
                   className="text-foreground"
@@ -59,12 +58,10 @@ const VenueGrid = (venue: Venue) => {
                   {Math.round(venue.rating) + ',0'}
                 </span>
               </div>
-              <div className="mt-4 flex items-center gap-2 text-sm font-medium text-muted">
-                {venue.maxGuests} guests
-                <Circle strokeWidth={0} fill="#A8A29E" size={4} />
-                {venue._count.bookings} bookings
-              </div>
             </header>
+            <footer className="mt-4 font-medium">
+              £{venue.price} per night
+            </footer>
           </article>
         </Link>
       )}
