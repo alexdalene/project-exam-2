@@ -40,10 +40,12 @@ const VenueGrid = (venue: Venue) => {
               className="aspect-square h-full w-full rounded-md object-cover"
               loading="lazy"
             />
-            <header className="mt-2 flex h-full w-full items-start justify-between overflow-hidden">
+            <header className="mt-2 flex h-full w-full items-start justify-between overflow-hidden px-2 md:px-0">
               <div className="w-full">
-                <h2 className="mb-1 line-clamp-2 font-medium">{venue.name}</h2>
-                <p className="truncate text-sm text-muted-foreground">
+                <h2 className="mb-1 line-clamp-2 text-sm font-medium">
+                  {venue.name}
+                </h2>
+                <p className="truncate text-sm">
                   {venue.location.city + ', ' + venue.location.country}
                 </p>
               </div>
@@ -59,8 +61,8 @@ const VenueGrid = (venue: Venue) => {
                 </span>
               </div>
             </header>
-            <footer className="mt-4 font-medium">
-              £{venue.price} per night
+            <footer className="mt-4 px-2 text-sm font-medium md:px-0">
+              {venue.price} NOK per night
             </footer>
           </article>
         </Link>
