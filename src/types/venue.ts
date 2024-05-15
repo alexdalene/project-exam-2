@@ -1,4 +1,4 @@
-type Venue = {
+type VenueType = {
   id: string;
   name: string;
   description: string;
@@ -8,14 +8,14 @@ type Venue = {
   rating: number;
   created: string;
   updated: string;
-  meta: VenueMeta;
-  location: VenueLocation;
-  owner: VenueUser;
-  bookings: VenueBookings[];
+  meta: VenueMetaType;
+  location: VenueLocationType;
+  owner: VenueUserType;
+  bookings: VenueBookingsType[];
   _count: { bookings: number };
 };
 
-type VenueLocation = {
+type VenueLocationType = {
   address: string;
   city: string;
   zip: string;
@@ -25,14 +25,14 @@ type VenueLocation = {
   lng: number;
 };
 
-type VenueMeta = {
+type VenueMetaType = {
   wifi: boolean;
   parking: boolean;
   breakfast: boolean;
   pets: boolean;
 };
 
-type VenueUser = {
+type VenueUserType = {
   name: string;
   email: string;
   bio: string;
@@ -40,14 +40,14 @@ type VenueUser = {
   banner: { url: string; alt: string };
 };
 
-type VenueBookings = {
+type VenueBookingsType = {
   id: string;
   dateFrom: string;
   dateTo: string;
   guests: number;
   created: string;
   updated: string;
-  customer: VenueUser;
+  customer: VenueUserType;
 };
 
-export type { Venue };
+export type { VenueType };

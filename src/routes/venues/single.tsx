@@ -1,14 +1,14 @@
 import { useLoaderData } from 'react-router-dom';
 
-const Venue = () => {
+const VenuesSingle = () => {
   const { data } = useLoaderData();
 
   console.log(data);
   return (
     <div>
-      <h1>Venue Page</h1>
+      <h1>VenuesSingle Page</h1>
     </div>
   );
 };
 
-export default Venue;
+export default VenuesSingle;

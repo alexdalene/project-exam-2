@@ -1,4 +1,4 @@
-const getVenues = async (request: Request) => {
+const getAllVenues = async (request: Request) => {
   const url = new URL(request.url);
   const page = url.searchParams.get('page') || '1';
 
@@ -16,7 +16,7 @@ const getVenues = async (request: Request) => {
   return { venues: data.data, meta: data.meta };
 };
 
-const getVenue = async (venueId: string) => {
+const getSingleVenue = async (venueId: string) => {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL as string}/venues/${venueId}`,
@@ -35,4 +35,4 @@ const getVenue = async (venueId: string) => {
   }
 };
 
-export { getVenues, getVenue };
+export { getAllVenues, getSingleVenue };

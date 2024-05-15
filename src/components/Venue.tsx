@@ -4,7 +4,7 @@ import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const VenueItem = (venue: Venue) => {
+const Venue = (venue: Venue) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -71,4 +71,4 @@ const VenueItem = (venue: Venue) => {
   );
 };
 
-export default VenueItem;
+export default Venue;

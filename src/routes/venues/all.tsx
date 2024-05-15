@@ -1,5 +1,3 @@
-import { useLoaderData } from 'react-router-dom';
-
 import {
   Pagination,
   PaginationContent,
@@ -9,18 +7,24 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import VenueItem from '@/components/venue/VenueItem';
-import { Venue } from '@/types/venue';
-import { Meta } from '@/types/response';
+import Venue from '@/components/Venue';
 
-const Venues = () => {
-  const { venues, meta } = useLoaderData() as { venues: Venue[]; meta: Meta };
+import { VenueType } from '@/types/venue';
+import { MetaType } from '@/types/response';
+
+import { useLoaderData } from 'react-router-dom';
+
+const VenuesAll = () => {
+  const { venues, meta } = useLoaderData() as {
+    venues: VenueType[];
+    meta: MetaType;
+  };
 
   return (
     <>
       <div className="grid grid-cols-1 pt-8 md:grid-cols-4">
         {venues.map((venue) => (
-          <VenueItem key={venue.id} {...venue} />
+          <Venue key={venue.id} {...venue} />
         ))}
       </div>
 
@@ -64,4 +68,4 @@ const Venues = () => {
   );
 };
 
-export default Venues;
+export default VenuesAll;

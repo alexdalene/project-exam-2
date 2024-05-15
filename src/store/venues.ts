@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { Venue } from '@/types/venue';
-import { Meta } from '@/types/response';
+import { VenueType } from '@/types/venue';
+import { MetaType } from '@/types/response';
 
 /**
  * Represents the venue store.
  */
 interface VenueStore {
-  meta: Meta;
-  venues: Venue[];
+  meta: MetaType;
+  venues: VenueType[];
   error: string | null;
   fetchVenues: (page?: string) => Promise<void>;
   fetchNextPage: () => Promise<void>;
@@ -18,7 +18,7 @@ interface VenueStore {
 const useVenueStore = create(
   persist<VenueStore>(
     (set, get) => ({
-      meta: {} as Meta,
+      meta: {} as MetaType,
       venues: [],
       error: null,
       fetchVenues: async (page = '') => {

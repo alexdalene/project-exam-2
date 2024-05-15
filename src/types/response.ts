@@ -1,4 +1,4 @@
-type Meta = {
+type MetaType = {
   currentPage: number;
   isFirstPage: boolean;
   isLastPage: boolean;
@@ -8,4 +8,4 @@ type Meta = {
   totalCount: number;
 };
 
-export type { Meta };
+export type { MetaType };
