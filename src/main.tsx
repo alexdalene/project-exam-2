@@ -1,5 +1,5 @@
 import Hero from './routes/Hero';
-import Venues from './routes/Venues';
+import VenuesLayout from './routes/Venues';
 import Root from './routes/root';
 import './index.css';
 import ErrorPage from './ErrorPage';
@@ -11,6 +11,9 @@ import AuthLayout from './routes/Auth';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Venues from './routes/Venues/Venues';
+
+import { getVenues, getVenue } from './loaders/venues';
 
 const router = createBrowserRouter([
   {
@@ -23,15 +26,23 @@ const router = createBrowserRouter([
         element: <Hero />,
       },
       {
-        path: '/venues',
-        element: <Venues />,
+        path: 'venues',
+        element: <VenuesLayout />,
+        children: [
+          {
+            index: true,
+            element: <Venues />,
+            loader: ({ request }) => getVenues(request),
+          },
+          {
+            path: ':venueId',
+            element: <Venue />,
+            loader: ({ params }) => getVenue(params.venueId || ''),
+          },
+        ],
       },
       {
-        path: '/venues/:id',
-        element: <Venue />,
-      },
-      {
-        path: '/auth',
+        path: 'auth',
         element: <AuthLayout />,
         children: [
           {
