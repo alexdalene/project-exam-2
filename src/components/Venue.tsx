@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import type { Venue } from '@/types/venue';
+import type { VenueType } from '@/types/venue';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const Venue = (venue: Venue) => {
+const Venue = (venue: VenueType) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 

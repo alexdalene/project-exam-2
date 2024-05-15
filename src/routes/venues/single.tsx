@@ -1,7 +1,8 @@
 import { useLoaderData } from 'react-router-dom';
+import type { VenueType } from '@/types/venue';
 
 const VenuesSingle = () => {
-  const { data } = useLoaderData();
+  const { data } = useLoaderData() as { data: VenueType };
 
   console.log(data);
   return (

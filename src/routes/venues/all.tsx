@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/pagination';
 import Venue from '@/components/Venue';
 
-import { VenueType } from '@/types/venue';
-import { MetaType } from '@/types/response';
+import type { VenueType } from '@/types/venue';
+import type { MetaType } from '@/types/response';
 
 import { useLoaderData } from 'react-router-dom';
 
