@@ -9,8 +9,6 @@ const Root = () => {
   const [hash, setHash] = useState(true);
   const navigation = useNavigation();
 
-  console.log(navigation.state);
-
   useEffect(() => {
     if (location.hash === '#debug') {
       setHash(false);
