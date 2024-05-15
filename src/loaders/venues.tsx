@@ -1,19 +1,23 @@
 const getAllVenues = async (request: Request) => {
-  const url = new URL(request.url);
-  const page = url.searchParams.get('page') || '1';
+  try {
+    const url = new URL(request.url);
+    const page = url.searchParams.get('page') || '1';
 
-  const response = await fetch(
-    `${import.meta.env.VITE_API_URL as string}/venues?page=${page}`,
-    {
-      headers: {
-        'X-Noroff-API-Key': import.meta.env.VITE_API_KEY as string,
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL as string}/venues?page=${page}`,
+      {
+        headers: {
+          'X-Noroff-API-Key': import.meta.env.VITE_API_KEY as string,
+        },
       },
-    },
-  );
+    );
 
-  const data = await response.json();
+    const data = await response.json();
 
-  return { venues: data.data, meta: data.meta };
+    return { venues: data.data, meta: data.meta };
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const getSingleVenue = async (venueId: string) => {
@@ -35,4 +39,16 @@ const getSingleVenue = async (venueId: string) => {
   }
 };
 
-export { getAllVenues, getSingleVenue };
+const FilterVenues = ({ request }: { request: Request }) => {
+  const url = new URL(request.url);
+  const params = url.searchParams;
+
+  const price = params.get('price');
+  const amenities = params.get('amenities');
+  const guests = params.get('guests');
+
+  return { filters: { price, amenities, guests } };
+};
+
+// eslint-disable-next-line react-refresh/only-export-components
+export { getAllVenues, getSingleVenue, FilterVenues };

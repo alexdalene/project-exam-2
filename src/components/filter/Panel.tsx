@@ -6,32 +6,70 @@ import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { DrawerClose, DrawerFooter } from '@/components/ui/drawer';
 
-import { useSearchParams } from 'react-router-dom';
-
-const DEFAULT_PRICE = [500];
+import { Form, useLoaderData } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const Panel = ({ component }: { component: string }) => {
-  const [searchParams] = useSearchParams();
+  const [price, setPrice] = useState([500]);
+  const [amenities, setAmenities] = useState<string[]>([]);
+  const [guests, setGuests] = useState(1);
 
-  const price = searchParams.get('price')
-    ? [Number(searchParams.get('price'))]
-    : DEFAULT_PRICE;
-  const amenities = searchParams.get('amenities') || '';
-  const guests = searchParams.get('guests') || '';
+  const { filters } = useLoaderData() as {
+    filters: { price: string; amenities: string; guests: string };
+  };
 
-  console.log(price, amenities, guests);
+  useEffect(() => {
+    if (filters) {
+      if (filters.price) {
+        setPrice([parseInt(filters.price)]);
+      }
+
+      if (filters.amenities) {
+        setAmenities(filters.amenities.split(','));
+      }
+
+      if (filters.guests) {
+        setGuests(parseInt(filters.guests));
+      }
+    }
+  }, [filters]);
+
+  const theAmenities = [
+    {
+      name: 'wifi',
+      label: 'WiFi',
+    },
+    {
+      name: 'breakfast',
+      label: 'Breakfast',
+    },
+    {
+      name: 'pets',
+      label: 'Pets',
+    },
+    {
+      name: 'parking',
+      label: 'Parking',
+    },
+  ];
 
   return (
     <>
-      <div className="flex flex-col gap-8 px-4 pt-4 md:px-0">
+      <Form
+        className="flex flex-col gap-8 px-4 pt-4 md:px-0"
+        id="filter-form"
+        role="filter"
+        method="get"
+      >
         <div className="flex flex-col gap-4">
           <Label htmlFor="price">Price</Label>
           <Slider
             step={100}
-            defaultValue={DEFAULT_PRICE}
             max={5000}
             id="price"
+            name="price"
             value={price}
+            onValueChange={(value) => setPrice(value)}
           />
           <span className="text-center text-muted-foreground">
             {price} NOK per night
@@ -40,37 +78,29 @@ const Panel = ({ component }: { component: string }) => {
 
         <div className="flex flex-col gap-4">
           <Label htmlFor="amenities">Amenities</Label>
-          <ToggleGroup type="multiple" id="amenitites">
-            <ToggleGroupItem
-              value="wifi"
-              variant="outline"
-              data-state={amenities.includes('wifi') ? 'on' : 'off'}
-            >
-              WiFi
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="breakfast"
-              variant="outline"
-              data-state={amenities.includes('breakfast') ? 'on' : 'off'}
-            >
-              Breakfast
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="pets"
-              variant="outline"
-              data-state={amenities.includes('pets') ? 'on' : 'off'}
-            >
-              Pets
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="parking"
-              variant="outline"
-              data-state={amenities.includes('parking') ? 'on' : 'off'}
-            >
-              Parking
-            </ToggleGroupItem>
+          <ToggleGroup
+            type="multiple"
+            id="amenitites"
+            value={amenities}
+            defaultValue={amenities}
+            onValueChange={(value) => {
+              setAmenities(value);
+            }}
+          >
+            {theAmenities.map((amenity) => (
+              <ToggleGroupItem
+                key={amenity.name}
+                value={amenity.name}
+                variant="outline"
+                aria-label={`Toggle ${amenity.label}`}
+              >
+                {amenity.label}
+              </ToggleGroupItem>
+            ))}
           </ToggleGroup>
         </div>
+
+        <input type="hidden" name="amenities" value={amenities} />
 
         <div className="flex flex-col gap-4">
           <Label htmlFor="guests">Guests</Label>
@@ -79,7 +109,9 @@ const Panel = ({ component }: { component: string }) => {
             placeholder="How many guests?"
             className="text-base"
             id="guests"
+            name="guests"
             value={guests}
+            onChange={(e) => setGuests(parseInt(e.target.value))}
             min={1}
           />
         </div>
@@ -106,7 +138,7 @@ const Panel = ({ component }: { component: string }) => {
             </DrawerClose>
           </DrawerFooter>
         )}
-      </div>
+      </Form>
     </>
   );
 };
