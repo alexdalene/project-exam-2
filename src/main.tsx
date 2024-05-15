@@ -8,7 +8,7 @@ import App from './routes/app';
 import Venues from './routes/venues';
 import VenuesSingle from './routes/venues/single';
 import VenuesAll from './routes/venues/all';
-import { getAllVenues, getSingleVenue } from './loaders/venues';
+import { getAllVenues, getSingleVenue, FilterVenues } from './loaders/venues';
 
 // Auth
 import Auth from './routes/auth';
@@ -41,6 +41,8 @@ const router = createBrowserRouter([
       {
         path: 'venues',
         element: <Venues />,
+        loader: FilterVenues,
+        id: 'venues',
         children: [
           {
             index: true,
