@@ -12,10 +12,8 @@ import {
 } from '@/components/ui/dialog';
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -33,8 +31,9 @@ const FilterPanel = () => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="h-12 min-w-12" size="icon">
+          <Button variant="outline" className="h-12">
             <ListFilter />
+            Filter
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -45,7 +44,7 @@ const FilterPanel = () => {
             </DialogDescription>
           </DialogHeader>
           <Separator />
-          <Panel />
+          <Panel component="dialog" />
         </DialogContent>
       </Dialog>
     );
@@ -54,8 +53,9 @@ const FilterPanel = () => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline" className="h-12 min-w-12" size="icon">
+        <Button variant="outline" className="h-12">
           <ListFilter />
+          Filter
         </Button>
       </DrawerTrigger>
       <DrawerContent>
@@ -66,12 +66,7 @@ const FilterPanel = () => {
           </DrawerDescription>
         </DrawerHeader>
         <Separator />
-        <Panel />
-        <DrawerFooter className="pt-2">
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
+        <Panel component="drawer" />
       </DrawerContent>
     </Drawer>
   );

@@ -1,11 +1,15 @@
 import Navbar from '@/components/navbar/Navbar';
+import Loading from '@/loading';
 
 import { Leva } from 'leva';
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigation } from 'react-router-dom';
 
 const Root = () => {
   const [hash, setHash] = useState(true);
+  const navigation = useNavigation();
+
+  console.log(navigation.state);
 
   useEffect(() => {
     if (location.hash === '#debug') {
@@ -15,6 +19,8 @@ const Root = () => {
 
   return (
     <>
+      {navigation.state === 'loading' && <Loading />}
+
       <Navbar />
 
       <Outlet />

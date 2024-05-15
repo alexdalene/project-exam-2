@@ -81,7 +81,7 @@ const App = () => {
       <main>
         <section
           ref={firstActRef}
-          className="grid min-h-dvh max-w-[1100px] p-8"
+          className="mx-auto grid min-h-dvh max-w-[1400px] p-8"
         >
           <div className="flex justify-between">
             <div className="flex flex-col-reverse">
@@ -100,7 +100,7 @@ const App = () => {
 
         <section
           ref={secondActRef}
-          className="mx-auto grid min-h-dvh max-w-[1100px] px-8"
+          className="mx-auto grid min-h-dvh max-w-[1400px] px-8"
         >
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
             {sections.map((section, index) => (

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import type { Venue } from '@/types/venue';
+import type { VenueType } from '@/types/venue';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const VenueGrid = (venue: Venue) => {
+const Venue = (venue: VenueType) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -32,7 +32,7 @@ const VenueGrid = (venue: Venue) => {
           </div>
         </div>
       ) : (
-        <Link to={`/venues/${venue.id}`}>
+        <Link to={`./${venue.id}`}>
           <article className="h-fit w-full overflow-hidden rounded-md bg-background px-3 pb-8 pt-2 focus:bg-accent md:hover:bg-accent">
             <img
               src={venue.media[0]?.url}
@@ -43,23 +43,23 @@ const VenueGrid = (venue: Venue) => {
             <header className="mt-2 flex h-full w-full items-start justify-between overflow-hidden px-2 md:px-0">
               <div className="w-full">
                 <h2 className="mb-1 line-clamp-2 text-sm font-medium">
-                  {venue.name}
-                </h2>
-                <p className="truncate text-sm">
                   {venue.location.city + ', ' + venue.location.country}
-                </p>
+                </h2>
+                <p className="truncate text-sm"></p>
               </div>
-              <div className="flex items-center gap-1">
-                <Star
-                  size={20}
-                  strokeWidth={0}
-                  fill="#292524"
-                  className="text-foreground"
-                />
-                <span className="text-sm font-medium">
-                  {Math.round(venue.rating) + ',0'}
-                </span>
-              </div>
+              {venue.rating !== 0 && (
+                <div className="flex items-center gap-1">
+                  <Star
+                    size={20}
+                    strokeWidth={0}
+                    fill="#292524"
+                    className="text-foreground"
+                  />
+                  <span className="text-sm font-medium">
+                    {Math.round(venue.rating) + ',0'}
+                  </span>
+                </div>
+              )}
             </header>
             <footer className="mt-4 px-2 text-sm font-medium md:px-0">
               {venue.price} NOK per night
@@ -71,4 +71,4 @@ const VenueGrid = (venue: Venue) => {
   );
 };
 
-export default VenueGrid;
+export default Venue;
