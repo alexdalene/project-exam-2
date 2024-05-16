@@ -1,3 +1,5 @@
+import useStore from '@/store/venueStore';
+
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
@@ -5,50 +7,23 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { DrawerClose, DrawerFooter } from '@/components/ui/drawer';
+import { Separator } from '@/components/ui/separator';
 
-import { Form, useLoaderData, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 const Panel = ({ component }: { component: string }) => {
-  const [, setSearchParams] = useSearchParams();
-  const { filters } = useLoaderData() as {
-    filters: { price: string; amenities: string; guests: string };
-  };
-
-  const [price, setPrice] = useState([
-    filters?.price ? parseInt(filters.price) : 500,
-  ]);
-  const [amenities, setAmenities] = useState<string[]>(
-    filters?.amenities ? filters.amenities.split(',') : [],
-  );
-  const [guests, setGuests] = useState(
-    filters?.guests ? parseInt(filters.guests) : 1,
-  );
+  const { filterCriteria, setFilterCriteria, applyFilters } = useStore();
+  const [price, setPrice] = useState<[number, number]>([100, 5000]);
+  const [amenities, setAmenities] = useState<string[]>([]);
+  const [guests, setGuests] = useState<string | number>('');
 
   useEffect(() => {
-    if (filters) {
-      if (filters.price) {
-        setPrice([parseInt(filters.price)]);
-      }
-
-      if (filters.amenities) {
-        setAmenities(filters.amenities.split(','));
-      }
-
-      if (filters.guests) {
-        setGuests(parseInt(filters.guests));
-      }
+    if (filterCriteria) {
+      setPrice(filterCriteria.price);
+      setAmenities(filterCriteria.amenities);
+      setGuests(filterCriteria.guests);
     }
-  }, [filters]);
-
-  const handleReset = (e) => {
-    e.preventDefault();
-    setPrice([500]); // Reset price to 0
-    setAmenities([]); // Reset amenities to an empty array
-    setGuests(1); // Reset guests to 0
-
-    setSearchParams({});
-  };
+  }, [filterCriteria]);
 
   const theAmenities = [
     {
@@ -69,39 +44,120 @@ const Panel = ({ component }: { component: string }) => {
     },
   ];
 
+  const handlePriceChange = (index: number, value: number) => {
+    const newPrice = [...price] as [number, number];
+    if (index === 0) {
+      newPrice[0] = value;
+      if (value > newPrice[1]) {
+        newPrice[1] = value;
+      }
+    } else {
+      newPrice[1] = value;
+      if (value < newPrice[0]) {
+        newPrice[0] = value;
+      }
+    }
+    setPrice(newPrice);
+  };
+
+  const handleSearch = () => {
+    const criteria = {
+      price,
+      amenities,
+      guests: guests as number,
+    };
+    setFilterCriteria(criteria);
+    applyFilters();
+  };
+
+  const handleReset = () => {
+    const defaultCriteria = {
+      price: [100, 5000] as [number, number],
+      amenities: [],
+      guests: '',
+    };
+    setPrice(defaultCriteria.price);
+    setAmenities(defaultCriteria.amenities);
+    setGuests(defaultCriteria.guests);
+    setFilterCriteria(null);
+    applyFilters();
+  };
+
   return (
     <>
-      <Form
+      <form
         className="flex flex-col gap-8 px-4 pt-4 md:px-0"
         id="filter-form"
         role="filter"
-        method="get"
       >
         <div className="flex flex-col gap-4">
           <Label htmlFor="price">Price</Label>
           <Slider
             step={100}
+            min={100}
             max={5000}
             id="price"
             name="price"
+            defaultValue={price}
             value={price}
-            onValueChange={(value) => setPrice(value)}
+            onValueChange={(value) => setPrice(value as [number, number])}
           />
-          <span className="text-center text-muted-foreground">
-            {price} NOK per night
-          </span>
+          <div className="mt-8 flex items-center gap-4">
+            <div className="relative w-full">
+              <Label
+                htmlFor="price-min"
+                className="absolute top-0 -mt-4 text-xs text-muted-foreground"
+              >
+                From
+              </Label>
+              <Input
+                type="number"
+                id="price-min"
+                value={price[0]}
+                onChange={(value) =>
+                  handlePriceChange(0, parseInt(value.target.value) || 0)
+                }
+                min={100}
+                max={5000}
+                step={100}
+                className="mt-2"
+              />
+            </div>
+            -
+            <div className="relative w-full">
+              <Label
+                htmlFor="price-max"
+                className="absolute top-0 -mt-4 text-xs text-muted-foreground"
+              >
+                To
+              </Label>
+              <Input
+                type="number"
+                id="price-max"
+                value={price[1]}
+                onChange={(value) =>
+                  handlePriceChange(1, parseInt(value.target.value) || 0)
+                }
+                min={100}
+                max={5000}
+                step={100}
+                className="mt-2"
+              />
+            </div>
+          </div>
         </div>
+
+        <Separator />
 
         <div className="flex flex-col gap-4">
           <Label htmlFor="amenities">Amenities</Label>
           <ToggleGroup
             type="multiple"
             id="amenitites"
-            value={amenities}
+            className="flex-nowrap justify-stretch gap-2"
             defaultValue={amenities}
-            onValueChange={(value) => {
-              setAmenities(value);
-            }}
+            value={amenities}
+            onValueChange={(value) => setAmenities(value as string[])}
           >
             {theAmenities.map((amenity) => (
               <ToggleGroupItem
@@ -109,6 +165,7 @@ const Panel = ({ component }: { component: string }) => {
                 value={amenity.name}
                 variant="outline"
                 aria-label={`Toggle ${amenity.label}`}
+                className="h-20 w-full"
               >
                 {amenity.label}
               </ToggleGroupItem>
@@ -126,39 +183,39 @@ const Panel = ({ component }: { component: string }) => {
             className="text-base"
             id="guests"
             name="guests"
-            value={guests}
-            onChange={(e) => setGuests(parseInt(e.target.value))}
             min={1}
+            max={12}
+            value={guests}
+            onChange={(value) => setGuests(parseInt(value.target.value) || 1)}
           />
         </div>
 
         {component === 'dialog' && (
           <DialogFooter>
-            <Button variant="outline" onClick={handleReset}>
+            <Button variant="outline" type="button" onClick={handleReset}>
               Reset
             </Button>
             <DialogClose asChild>
-              <Button type="submit">Search</Button>
+              <Button type="button" onClick={handleSearch}>
+                Search
+              </Button>
             </DialogClose>
           </DialogFooter>
         )}
 
         {component === 'drawer' && (
           <DrawerFooter>
-            <Button variant="outline" onClick={handleReset}>
+            <Button variant="outline" type="button" onClick={handleReset}>
               Reset
             </Button>
             <DrawerClose asChild>
-              <Button type="submit">Search</Button>
-            </DrawerClose>
-            <DrawerClose asChild>
-              <Button variant="ghost" className="mt-4">
-                Close
+              <Button type="button" onClick={handleSearch}>
+                Search
               </Button>
             </DrawerClose>
           </DrawerFooter>
         )}
-      </Form>
+      </form>
     </>
   );
 };
