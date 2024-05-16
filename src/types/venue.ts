@@ -30,6 +30,7 @@ type VenueMetaType = {
   parking: boolean;
   breakfast: boolean;
   pets: boolean;
+  [key: string]: boolean;
 };
 
 type VenueUserType = {
