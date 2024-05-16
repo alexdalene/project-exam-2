@@ -4,13 +4,24 @@ import Venue from '@/components/Venue';
 import PaginationComponent from '@/components/Pagination';
 
 import { useEffect } from 'react';
+import { Separator } from '@/components/ui/separator';
 
 const VenuesAll = () => {
-  const { venues, meta, loading, error, fetchVenues } = useStore();
+  const {
+    venues,
+    filteredVenues,
+    meta,
+    loading,
+    error,
+    fetchVenues,
+    filtered,
+  } = useStore();
 
   useEffect(() => {
     fetchVenues();
   }, [fetchVenues]);
+
+  console.log(filteredVenues);
 
   return (
     <>
@@ -21,13 +32,16 @@ const VenuesAll = () => {
           aria-busy={loading}
           aria-live="polite"
         >
-          {venues.map((venue) => (
-            <Venue key={venue.id} {...venue} />
-          ))}
+          {filteredVenues.length === 0
+            ? venues.map((venue) => <Venue key={venue.id} {...venue} />)
+            : filteredVenues.map((venue) => (
+                <Venue key={venue.id} {...venue} />
+              ))}
         </div>
       )}
 
-      {meta && <PaginationComponent meta={meta} />}
+      {!filtered && <Separator className="mt-8" />}
+      {meta && !filtered && <PaginationComponent meta={meta} />}
     </>
   );
 };
