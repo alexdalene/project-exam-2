@@ -6,17 +6,24 @@ import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { DrawerClose, DrawerFooter } from '@/components/ui/drawer';
 
-import { Form, useLoaderData } from 'react-router-dom';
+import { Form, useLoaderData, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 const Panel = ({ component }: { component: string }) => {
-  const [price, setPrice] = useState([500]);
-  const [amenities, setAmenities] = useState<string[]>([]);
-  const [guests, setGuests] = useState(1);
-
+  const [, setSearchParams] = useSearchParams();
   const { filters } = useLoaderData() as {
     filters: { price: string; amenities: string; guests: string };
   };
+
+  const [price, setPrice] = useState([
+    filters?.price ? parseInt(filters.price) : 500,
+  ]);
+  const [amenities, setAmenities] = useState<string[]>(
+    filters?.amenities ? filters.amenities.split(',') : [],
+  );
+  const [guests, setGuests] = useState(
+    filters?.guests ? parseInt(filters.guests) : 1,
+  );
 
   useEffect(() => {
     if (filters) {
@@ -33,6 +40,15 @@ const Panel = ({ component }: { component: string }) => {
       }
     }
   }, [filters]);
+
+  const handleReset = (e) => {
+    e.preventDefault();
+    setPrice([500]); // Reset price to 0
+    setAmenities([]); // Reset amenities to an empty array
+    setGuests(1); // Reset guests to 0
+
+    setSearchParams({});
+  };
 
   const theAmenities = [
     {
@@ -118,7 +134,9 @@ const Panel = ({ component }: { component: string }) => {
 
         {component === 'dialog' && (
           <DialogFooter>
-            <Button variant="outline">Reset</Button>
+            <Button variant="outline" onClick={handleReset}>
+              Reset
+            </Button>
             <DialogClose asChild>
               <Button type="submit">Search</Button>
             </DialogClose>
@@ -127,7 +145,9 @@ const Panel = ({ component }: { component: string }) => {
 
         {component === 'drawer' && (
           <DrawerFooter>
-            <Button variant="outline">Reset</Button>
+            <Button variant="outline" onClick={handleReset}>
+              Reset
+            </Button>
             <DrawerClose asChild>
               <Button type="submit">Search</Button>
             </DrawerClose>
