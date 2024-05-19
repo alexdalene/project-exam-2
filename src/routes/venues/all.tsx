@@ -21,8 +21,6 @@ const VenuesAll = () => {
     fetchVenues();
   }, [fetchVenues]);
 
-  console.log(filteredVenues);
-
   return (
     <>
       {error && <div>Error: {error}</div>}
