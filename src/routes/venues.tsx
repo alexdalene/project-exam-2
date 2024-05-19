@@ -1,12 +1,23 @@
 import { useSearchStore } from '@/store/search';
+import useStore from '@/store/venueStore';
 
 import FilterPanel from '@/components/filter/FilterPanel';
 import { Input } from '@/components/ui/input';
 
 import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Venues = () => {
   const { query, updateQuery } = useSearchStore();
+  const { searchVenues, fetchVenues } = useStore();
+
+  useEffect(() => {
+    if (query.length > 0) {
+      searchVenues(query);
+    } else {
+      fetchVenues();
+    }
+  }, [query, searchVenues, fetchVenues]);
 
   return (
     <div className="flex flex-col">
