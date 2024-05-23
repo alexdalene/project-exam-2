@@ -12,7 +12,12 @@ import { Separator } from '@/components/ui/separator';
 import { useState, useEffect } from 'react';
 
 const Panel = ({ component }: { component: string }) => {
-  const { filterCriteria, setFilterCriteria, applyFilters } = useStore();
+  const {
+    filterCriteria,
+    setFilterCriteria,
+    fetchAllVenues,
+    resetFilterCriteria,
+  } = useStore();
   const [price, setPrice] = useState<[number, number]>([100, 5000]);
   const [amenities, setAmenities] = useState<string[]>([]);
   const [guests, setGuests] = useState<string | number>('');
@@ -67,7 +72,7 @@ const Panel = ({ component }: { component: string }) => {
       guests: guests as number,
     };
     setFilterCriteria(criteria);
-    applyFilters();
+    fetchAllVenues();
   };
 
   const handleReset = () => {
@@ -79,8 +84,8 @@ const Panel = ({ component }: { component: string }) => {
     setPrice(defaultCriteria.price);
     setAmenities(defaultCriteria.amenities);
     setGuests(defaultCriteria.guests);
-    setFilterCriteria(null);
-    applyFilters();
+    resetFilterCriteria();
+    fetchAllVenues();
   };
 
   return (

@@ -1,25 +1,21 @@
 import { Progress } from '@/components/ui/progress';
+import useStore from './store/venueStore';
 
 import { useState, useEffect } from 'react';
-import { useNavigation } from 'react-router-dom';
 
 const Loading = () => {
   const [progress, setProgress] = useState(15);
-  const navigation = useNavigation();
+  const { loading } = useStore();
 
   useEffect(() => {
-    if (navigation.state === 'loading') {
+    if (loading) {
       setProgress(66);
     }
-
-    if (navigation.state === 'idle') {
-      setProgress(100);
-    }
-  }, [navigation.state]);
+  }, [loading]);
 
   return (
     <Progress
-      className="fixed left-0 top-0 z-50 h-1 rounded-none bg-transparent"
+      className="fixed left-0 top-0 z-50 h-1.5 rounded-none bg-transparent"
       value={progress}
     />
   );
