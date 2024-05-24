@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -24,7 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import useStore from '@/store/venueStore';
 import { LoaderCircle } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const AuthLoginSchema = z.object({
   email: z
@@ -37,29 +37,33 @@ const AuthLoginSchema = z.object({
 });
 
 const AuthLogin = () => {
-  const { login, userLoading, user } = useStore();
+  const { login, userLoading, userSuccess } = useStore();
   const navigate = useNavigate();
+  const location = useLocation() as { state: { email: string } };
+  const { email } = location.state || '';
+  const [isSent, setIsSent] = useState(false);
 
   const form = useForm<z.infer<typeof AuthLoginSchema>>({
     resolver: zodResolver(AuthLoginSchema),
     defaultValues: {
-      email: '',
+      email: email || '',
       password: '',
     },
   });
 
   const onSubmit = (values: z.infer<typeof AuthLoginSchema>) => {
     login(values);
+    setIsSent(true);
   };
 
   useEffect(() => {
-    if (user) {
+    if (userSuccess && !userLoading && isSent) {
       navigate('/profile');
     }
-  }, [user]);
+  }, [userSuccess, userLoading, isSent]);
 
   return (
-    <Card>
+    <Card className="max-w-[360px]">
       <CardHeader>
         <CardTitle>Login</CardTitle>
         <CardDescription>
