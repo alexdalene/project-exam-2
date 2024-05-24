@@ -51,4 +51,4 @@ type VenueBookingsType = {
   customer: VenueUserType;
 };
 
-export type { VenueType };
+export type { VenueType, VenueUserType };
