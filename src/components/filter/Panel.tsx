@@ -1,3 +1,5 @@
+import { useFilterState } from '@/hooks/useFilterState';
+import { useVenueFilter } from '@/hooks/useVenueFilter';
 import useStore from '@/store/venueStore';
 
 import { Input } from '@/components/ui/input';
@@ -9,21 +11,11 @@ import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { DrawerClose, DrawerFooter } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 
-import { useState, useEffect } from 'react';
-
 const Panel = ({ component }: { component: string }) => {
-  const { filterCriteria, setFilterCriteria, applyFilters } = useStore();
-  const [price, setPrice] = useState<[number, number]>([100, 5000]);
-  const [amenities, setAmenities] = useState<string[]>([]);
-  const [guests, setGuests] = useState<string | number>('');
+  const { price, amenities, guests, setFilterState } = useFilterState();
+  const { resetFiltersAndFetchVenues } = useVenueFilter();
 
-  useEffect(() => {
-    if (filterCriteria) {
-      setPrice(filterCriteria.price);
-      setAmenities(filterCriteria.amenities);
-      setGuests(filterCriteria.guests);
-    }
-  }, [filterCriteria]);
+  const { fetchAllVenues } = useStore();
 
   const theAmenities = [
     {
@@ -44,43 +36,20 @@ const Panel = ({ component }: { component: string }) => {
     },
   ];
 
-  const handlePriceChange = (index: number, value: number) => {
-    const newPrice = [...price] as [number, number];
-    if (index === 0) {
-      newPrice[0] = value;
-      if (value > newPrice[1]) {
-        newPrice[1] = value;
-      }
-    } else {
-      newPrice[1] = value;
-      if (value < newPrice[0]) {
-        newPrice[0] = value;
-      }
+  const handlePriceChange = (value: [number, number]) => {
+    const newPrice = [...value] as [number, number];
+    if (newPrice[0] > newPrice[1]) {
+      newPrice[1] = newPrice[0];
+    } else if (newPrice[1] < newPrice[0]) {
+      newPrice[0] = newPrice[1];
     }
-    setPrice(newPrice);
+    setFilterState({ price: newPrice });
   };
 
   const handleSearch = () => {
-    const criteria = {
-      price,
-      amenities,
-      guests: guests as number,
-    };
-    setFilterCriteria(criteria);
-    applyFilters();
-  };
-
-  const handleReset = () => {
-    const defaultCriteria = {
-      price: [100, 5000] as [number, number],
-      amenities: [],
-      guests: '',
-    };
-    setPrice(defaultCriteria.price);
-    setAmenities(defaultCriteria.amenities);
-    setGuests(defaultCriteria.guests);
-    setFilterCriteria(null);
-    applyFilters();
+    const filterCriteria = { price, amenities, guests };
+    setFilterState(filterCriteria);
+    fetchAllVenues(filterCriteria);
   };
 
   return (
@@ -100,7 +69,9 @@ const Panel = ({ component }: { component: string }) => {
             name="price"
             defaultValue={price}
             value={price}
-            onValueChange={(value) => setPrice(value as [number, number])}
+            onValueChange={(value) => {
+              handlePriceChange(value as [number, number]);
+            }}
           />
           <div className="mt-8 flex items-center gap-4">
             <div className="relative w-full">
@@ -115,7 +86,7 @@ const Panel = ({ component }: { component: string }) => {
                 id="price-min"
                 value={price[0]}
                 onChange={(value) =>
-                  handlePriceChange(0, parseInt(value.target.value) || 0)
+                  handlePriceChange([parseInt(value.target.value), price[1]])
                 }
                 min={100}
                 max={5000}
@@ -136,7 +107,7 @@ const Panel = ({ component }: { component: string }) => {
                 id="price-max"
                 value={price[1]}
                 onChange={(value) =>
-                  handlePriceChange(1, parseInt(value.target.value) || 0)
+                  handlePriceChange([price[0], parseInt(value.target.value)])
                 }
                 min={100}
                 max={5000}
@@ -157,7 +128,9 @@ const Panel = ({ component }: { component: string }) => {
             className="flex-nowrap justify-stretch gap-2"
             defaultValue={amenities}
             value={amenities}
-            onValueChange={(value) => setAmenities(value as string[])}
+            onValueChange={(value) =>
+              setFilterState({ amenities: value as string[] })
+            }
           >
             {theAmenities.map((amenity) => (
               <ToggleGroupItem
@@ -186,13 +159,21 @@ const Panel = ({ component }: { component: string }) => {
             min={1}
             max={12}
             value={guests}
-            onChange={(value) => setGuests(parseInt(value.target.value) || 1)}
+            onChange={(value) =>
+              setFilterState({
+                guests: parseInt(value.target.value),
+              })
+            }
           />
         </div>
 
         {component === 'dialog' && (
           <DialogFooter>
-            <Button variant="outline" type="button" onClick={handleReset}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={resetFiltersAndFetchVenues}
+            >
               Reset
             </Button>
             <DialogClose asChild>
@@ -205,7 +186,11 @@ const Panel = ({ component }: { component: string }) => {
 
         {component === 'drawer' && (
           <DrawerFooter>
-            <Button variant="outline" type="button" onClick={handleReset}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={resetFiltersAndFetchVenues}
+            >
               Reset
             </Button>
             <DrawerClose asChild>

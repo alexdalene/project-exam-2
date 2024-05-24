@@ -3,11 +3,12 @@ import Loading from '@/loading';
 
 import { Leva } from 'leva';
 import { useEffect, useState } from 'react';
-import { Outlet, useNavigation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import useStore from '@/store/venueStore';
 
 const Root = () => {
   const [hash, setHash] = useState(true);
-  const navigation = useNavigation();
+  const { loading } = useStore();
 
   useEffect(() => {
     if (location.hash === '#debug') {
@@ -17,7 +18,7 @@ const Root = () => {
 
   return (
     <>
-      {navigation.state === 'loading' && <Loading />}
+      {loading && <Loading />}
 
       <Navbar />
 

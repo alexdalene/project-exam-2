@@ -1,47 +1,43 @@
-import { FilterCriteria } from '@/types/filter';
-import { MetaType } from '@/types/response';
-import { VenueType } from '@/types/venue';
+import type { MetaType } from '@/types/response';
+import type { VenueType } from '@/types/venue';
+import type { FilterCriteria } from '@/types/filter';
 import { StateCreator } from 'zustand';
+import { filterVenues } from '@/utils/filterVenues';
+import { fetchAllVenues, fetchSingleVenue, searchVenues } from '@/api/api';
 
 export type VenueSlice = {
   venues: VenueType[];
-  filteredVenues: VenueType[];
-  filterCriteria: FilterCriteria | null;
+  venue: VenueType | null;
   meta: MetaType;
   loading: boolean;
   error: string | null;
-  filtered: boolean;
-  fetchVenues: () => Promise<void>;
-  setFilterCriteria: (criteria: FilterCriteria) => void;
-  applyFilters: () => void;
-  searchVenues: (query: string) => void;
+  bookingDateRange: { from: Date | undefined; to: Date | undefined } | null;
+  setBookingDateRange: (dateRange: {
+    from: Date | undefined;
+    to: Date | undefined;
+  }) => void;
+  fetchAllVenues: (filterCriteria: FilterCriteria) => Promise<void>;
+  fetchSingleVenue: (id: string | undefined) => Promise<void>;
+  searchVenues: (query: string, filterCriteria: FilterCriteria) => void;
 };
 
-export const createVenueSlice: StateCreator<VenueSlice> = (set, get) => ({
+export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
   venues: [],
-  filteredVenues: [],
-  filterCriteria: null,
+  venue: null,
   meta: {} as MetaType,
   loading: false,
   error: null,
-  filtered: false,
+  bookingDateRange: null,
 
-  fetchVenues: async () => {
+  fetchAllVenues: async (filterCriteria: FilterCriteria) => {
     set({ loading: true, error: null });
-
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL as string}/venues?_bookings=true`,
-        {
-          headers: {
-            'X-Noroff-API-Key': import.meta.env.VITE_API_KEY as string,
-          },
-        },
-      );
-
-      const data = await response.json();
+      const data = await fetchAllVenues();
+      const venues = filterCriteria
+        ? filterVenues(data.data, filterCriteria)
+        : data.data;
       set({
-        venues: data.data,
+        venues,
         meta: data.meta,
         loading: false,
       });
@@ -50,23 +46,28 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set, get) => ({
     }
   },
 
-  searchVenues: async (query) => {
+  fetchSingleVenue: async (id: string | undefined) => {
+    if (!id) {
+      throw new Error('ID is required to fetch a single venue');
+    }
     set({ loading: true, error: null });
-
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL as string}/venues/search?q=${query}`,
-        {
-          headers: {
-            'X-Noroff-API-Key': import.meta.env.VITE_API_KEY as string,
-          },
-        },
-      );
+      const data = await fetchSingleVenue(id);
+      set({ venue: data.data, loading: false });
+    } catch (error) {
+      set({ error: (error as Error).message, loading: false });
+    }
+  },
 
-      const data = await response.json();
-
+  searchVenues: async (query: string, filterCriteria: FilterCriteria) => {
+    set({ loading: true, error: null });
+    try {
+      const data = await searchVenues(query);
+      const venues = filterCriteria
+        ? filterVenues(data.data, filterCriteria)
+        : data.data;
       set({
-        venues: data.data,
+        venues,
         meta: data.meta,
         loading: false,
       });
@@ -75,33 +76,7 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set, get) => ({
     }
   },
 
-  setFilterCriteria: (criteria) => {
-    set({ filterCriteria: criteria });
-  },
-
-  applyFilters: () => {
-    const { venues, filterCriteria } = get();
-
-    if (!filterCriteria) {
-      set({ filtered: false });
-      set({ filteredVenues: [] });
-      return;
-    }
-
-    const filter = venues.filter((venue) => {
-      const matchesPrice =
-        venue.price >= filterCriteria.price[0] &&
-        venue.price <= filterCriteria.price[1];
-      const matchesAmenities = filterCriteria.amenities.every(
-        (amenity) => venue.meta[amenity],
-      );
-      const matchesGuests = venue.maxGuests <= filterCriteria.guests;
-
-      console.log(matchesGuests);
-
-      return matchesPrice && matchesAmenities && matchesGuests;
-    });
-
-    set({ filteredVenues: filter, filtered: true });
+  setBookingDateRange: (dateRange) => {
+    set({ bookingDateRange: dateRange });
   },
 });
