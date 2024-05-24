@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { LogIn, User, UserPlus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const NavbarUser = () => {
   return (
@@ -18,13 +19,17 @@ const NavbarUser = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
-          <LogIn size={16} />
-          Login
+          <Link to="/auth" className="flex items-center gap-2">
+            <LogIn size={16} />
+            Login
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <UserPlus size={16} />
-          Sign up
+          <Link to="/auth/signup" className="flex items-center gap-2">
+            <UserPlus size={16} />
+            Sign up
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

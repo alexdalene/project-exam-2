@@ -15,7 +15,6 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'Venues', path: '/venues' },
     { name: 'Account', path: '/account' },
-    { name: 'Contact', path: '/contact' },
   ];
 
   const location = useLocation();
