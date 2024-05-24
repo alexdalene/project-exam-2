@@ -33,7 +33,6 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
     set({ loading: true, error: null });
     try {
       const data = await fetchAllVenues();
-      console.log(filterCriteria);
       const venues = filterCriteria
         ? filterVenues(data.data, filterCriteria)
         : data.data;

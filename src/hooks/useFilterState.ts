@@ -4,6 +4,7 @@ type FilterState = {
   price: [number, number];
   amenities: string[];
   guests: number | string;
+  query: string;
 };
 
 export const useFilterState = () => {
@@ -28,25 +29,37 @@ export const useFilterState = () => {
   ] as [number, number];
   const amenities = getStringArrayParam('amenities');
   const guests = getParam<string>('guests', '');
+  const query = getParam<string>('q', '');
 
-  const setFilterState = ({ price, amenities, guests }: FilterState) => {
+  const setFilterState = (newState: Partial<FilterState>) => {
+    // Get the current state
+    const currentState = { price, amenities, guests, query };
+
+    // Merge the current state with the new state
+    const updatedState = { ...currentState, ...newState };
+
     const params = new URLSearchParams();
 
-    if (price[0] !== 100 || price[1] !== 5000) {
-      params.set('priceMin', price[0].toString());
-      params.set('priceMax', price[1].toString());
+    // Set the parameters based on the updated state
+    if (updatedState.price[0] !== 100 || updatedState.price[1] !== 5000) {
+      params.set('priceMin', String(updatedState.price[0]));
+      params.set('priceMax', String(updatedState.price[1]));
     }
 
-    if (amenities.length) {
-      params.set('amenities', amenities.join(','));
+    if (updatedState.amenities.length > 0) {
+      params.set('amenities', updatedState.amenities.join(','));
     }
 
-    if (guests !== '') {
-      params.set('guests', guests.toString());
+    if (updatedState.guests !== '') {
+      params.set('guests', String(updatedState.guests));
+    }
+
+    if (updatedState.query !== '') {
+      params.set('q', updatedState.query);
     }
 
     setSearchParams(params);
   };
 
-  return { price, amenities, guests, setFilterState };
+  return { price, amenities, guests, query, setFilterState };
 };

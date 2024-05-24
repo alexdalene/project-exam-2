@@ -43,7 +43,7 @@ const Panel = ({ component }: { component: string }) => {
     } else if (newPrice[1] < newPrice[0]) {
       newPrice[0] = newPrice[1];
     }
-    setFilterState({ price: newPrice, amenities, guests: parseInt(guests) });
+    setFilterState({ price: newPrice });
   };
 
   const handleSearch = () => {
@@ -129,7 +129,7 @@ const Panel = ({ component }: { component: string }) => {
             defaultValue={amenities}
             value={amenities}
             onValueChange={(value) =>
-              setFilterState({ price, amenities: value as string[], guests })
+              setFilterState({ amenities: value as string[] })
             }
           >
             {theAmenities.map((amenity) => (
@@ -161,8 +161,6 @@ const Panel = ({ component }: { component: string }) => {
             value={guests}
             onChange={(value) =>
               setFilterState({
-                price,
-                amenities,
                 guests: parseInt(value.target.value),
               })
             }

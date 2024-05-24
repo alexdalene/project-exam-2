@@ -11,13 +11,18 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 
 const VenuesAll = () => {
-  const { venues, meta, loading, error, fetchAllVenues } = useStore();
-  const { price, amenities, guests } = useFilterState();
+  const { venues, meta, loading, error, fetchAllVenues, searchVenues } =
+    useStore();
+  const { price, amenities, guests, query } = useFilterState();
   const { resetFiltersAndFetchVenues } = useVenueFilter();
 
   useEffect(() => {
-    fetchAllVenues({ price, amenities, guests });
-  }, [fetchAllVenues]);
+    if (query !== '') {
+      searchVenues(query, { price, amenities, guests });
+    } else {
+      fetchAllVenues({ price, amenities, guests });
+    }
+  }, [fetchAllVenues, searchVenues]);
 
   return (
     <>
@@ -50,7 +55,9 @@ const VenuesAll = () => {
       )}
 
       <Separator className="mt-8" />
-      {meta && venues.length > 0 && <PaginationComponent meta={meta} />}
+      {meta && venues.length > 0 && venues.length >= 99 && (
+        <PaginationComponent meta={meta} />
+      )}
     </>
   );
 };
