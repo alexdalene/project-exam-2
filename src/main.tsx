@@ -8,16 +8,17 @@ import App from './routes/app';
 import Venues from './routes/venues';
 import VenuesSingle from './routes/venues/single';
 import VenuesAll from './routes/venues/all';
+import VenuesCreate from './routes/venues/create';
 
 // Auth
 import Auth from './routes/auth';
 import AuthLogin from './routes/auth/login';
 import AuthSignup from './routes/auth/signup';
 
-// Account
-import Account from './routes/account';
-import AccountVenues from './routes/account/venues';
-import AccountBookings from './routes/account/bookings';
+// Profile
+import Profile from './routes/profile';
+import ProfileVenues from './routes/profile/venues';
+import ProfileBookings from './routes/profile/bookings';
 
 // Error
 import Error from './error';
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
             path: ':venueId',
             element: <VenuesSingle />,
           },
+          {
+            path: 'create',
+            element: <VenuesCreate />,
+          },
         ],
       },
       {
@@ -66,14 +71,16 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'account',
-        element: <Account />,
+        path: 'profile',
+        element: <Profile />,
         children: [
           {
-            element: <AccountVenues />,
+            path: 'venues',
+            element: <ProfileVenues />,
           },
           {
-            element: <AccountBookings />,
+            path: 'bookings',
+            element: <ProfileBookings />,
           },
         ],
       },
