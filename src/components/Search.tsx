@@ -1,5 +1,6 @@
 import { useSearchStore } from '@/store/search';
 import useStore from '@/store/venueStore';
+import { useFilterState } from '@/hooks/useFilterState';
 
 import FilterPanel from '@/components/filter/FilterPanel';
 import { Input } from '@/components/ui/input';
@@ -10,13 +11,16 @@ const Search = () => {
   const { query, updateQuery } = useSearchStore();
   const { searchVenues, fetchAllVenues } = useStore();
   const [isQueryChanged, setIsQueryChanged] = useState(false);
+  const { price, amenities, guests } = useFilterState();
 
   useEffect(() => {
+    const filterCriteria = { price, amenities, guests };
+
     if (query.trim() !== '') {
-      searchVenues(query);
+      searchVenues(query, filterCriteria);
       setIsQueryChanged(true);
     } else if (isQueryChanged) {
-      fetchAllVenues();
+      fetchAllVenues(filterCriteria);
     }
   }, [query, searchVenues, fetchAllVenues, isQueryChanged]);
 

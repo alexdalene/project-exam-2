@@ -1,7 +1,7 @@
 type FilterCriteria = {
   price: [number, number];
   amenities: string[];
-  guests: number;
+  guests: number | string;
 } | null;
 
 export type { FilterCriteria };

@@ -1,4 +1,6 @@
 import useStore from '@/store/venueStore';
+import { useFilterState } from '@/hooks/useFilterState';
+import { useVenueFilter } from '@/hooks/useVenueFilter';
 
 import Venue from '@/components/Venue';
 import PaginationComponent from '@/components/Pagination';
@@ -9,18 +11,12 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 
 const VenuesAll = () => {
-  const {
-    venues,
-    meta,
-    loading,
-    error,
-    fetchAllVenues,
-    filtered,
-    setFilterCriteria,
-  } = useStore();
+  const { venues, meta, loading, error, fetchAllVenues } = useStore();
+  const { price, amenities, guests } = useFilterState();
+  const { resetFiltersAndFetchVenues } = useVenueFilter();
 
   useEffect(() => {
-    fetchAllVenues();
+    fetchAllVenues({ price, amenities, guests });
   }, [fetchAllVenues]);
 
   return (
@@ -43,8 +39,7 @@ const VenuesAll = () => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  setFilterCriteria(null);
-                  fetchAllVenues();
+                  resetFiltersAndFetchVenues();
                 }}
               >
                 Reset filters
@@ -54,8 +49,8 @@ const VenuesAll = () => {
         </>
       )}
 
-      {!filtered && <Separator className="mt-8" />}
-      {meta && !filtered && <PaginationComponent meta={meta} />}
+      <Separator className="mt-8" />
+      {meta && venues.length > 0 && <PaginationComponent meta={meta} />}
     </>
   );
 };
