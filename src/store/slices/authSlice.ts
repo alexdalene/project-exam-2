@@ -4,6 +4,7 @@ import type { VenueUserType } from '@/types/venue';
 
 export type AuthSlice = {
   user: VenueUserType | null;
+  token: string | null;
   userSuccess: boolean;
   userLoading: boolean;
   userError: string | null;
@@ -18,6 +19,7 @@ export type AuthSlice = {
 
 export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
   user: null,
+  token: null,
   userSuccess: false,
   userLoading: false,
   userError: null,
@@ -26,7 +28,12 @@ export const createAuthSlice: StateCreator<AuthSlice> = (set) => ({
     set({ userLoading: true, userError: null, userSuccess: false });
     try {
       const data = await login(credentials);
-      set({ user: data.data, userLoading: false, userSuccess: true });
+      set({
+        user: data.data,
+        token: data.data.accessToken,
+        userLoading: false,
+        userSuccess: true,
+      });
     } catch (error) {
       set({
         userError: (error as Error).message,
