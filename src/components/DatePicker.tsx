@@ -9,9 +9,8 @@ import { CalendarIcon } from 'lucide-react';
 import {
   format,
   eachDayOfInterval,
-  startOfToday,
-  sub,
   isSameDay,
+  startOfYesterday,
 } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { DateRange } from 'react-day-picker';
@@ -33,14 +32,14 @@ export function DatePicker() {
       const bookings = venue.bookings.flatMap((booking): Date[] =>
         eachDayOfInterval({
           start: new Date(booking.dateFrom),
-          end: sub(new Date(booking.dateTo), { days: 1 }),
+          end: new Date(booking.dateTo),
         }),
       );
 
       // Generate past dates up to today
       const pastDates = eachDayOfInterval({
         start: new Date(2024, 0, 1), // Start from an arbitrary past date
-        end: startOfToday(),
+        end: startOfYesterday(),
       });
 
       // Combine booked dates with past dates
@@ -54,6 +53,27 @@ export function DatePicker() {
     );
   }, [date, setBookingDateRange]);
 
+  const isValidRange = (
+    range: DateRange | undefined,
+    disabledDays: Date[],
+  ): boolean => {
+    if (range?.from && range?.to) {
+      const selectedDays = eachDayOfInterval({
+        start: range.from,
+        end: range.to,
+      });
+      return !selectedDays.some((day) =>
+        disabledDays.some((disabledDay) => isSameDay(day, disabledDay)),
+      );
+    }
+    // If only from date is selected, it's a valid range
+    else if (range?.from) {
+      return true;
+    }
+    // If both from and to dates are not defined, it's a valid range
+    return true;
+  };
+
   return (
     <div className="grid gap-2">
       <Popover>
@@ -62,7 +82,7 @@ export function DatePicker() {
             id="date"
             variant={'outline'}
             className={cn(
-              'w-[300px] justify-start text-left font-normal',
+              'h-12 max-w-[300px] justify-start text-left font-normal',
               !date && 'text-muted-foreground',
             )}
           >
@@ -88,32 +108,14 @@ export function DatePicker() {
             defaultMonth={date?.from}
             selected={date}
             onSelect={(range) => {
-              if (range?.from) {
-                if (range?.to) {
-                  // Check if the selected range includes any disabled days
-                  const selectedDays = eachDayOfInterval({
-                    start: range.from,
-                    end: range.to,
-                  });
-                  const includesDisabledDay = selectedDays.some((day) =>
-                    disabledDays.some((disabledDay) =>
-                      isSameDay(day, disabledDay),
-                    ),
-                  );
-
-                  // Only update the date state if the selected range does not include any disabled days
-                  if (!includesDisabledDay) {
-                    setDate(range);
-                  }
-                } else {
-                  // Update the date state as soon as from is defined
-                  setDate(range);
-                }
+              if (isValidRange(range, disabledDays)) {
+                setDate(range);
               }
             }}
             numberOfMonths={2}
             showOutsideDays={false}
             disabled={disabledDays}
+            min={2}
           />
         </PopoverContent>
       </Popover>

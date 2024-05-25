@@ -1,3 +1,7 @@
+/**
+ * API functions for fetching data from the backend
+ */
+
 const API_URL = import.meta.env.VITE_API_URL as string;
 const API_KEY = import.meta.env.VITE_API_KEY as string;
 
@@ -6,9 +10,12 @@ const headers = {
 };
 
 export const fetchAllVenues = async () => {
-  const response = await fetch(`${API_URL}/holidaze/venues?_bookings=true`, {
-    headers,
-  });
+  const response = await fetch(
+    `${API_URL}/holidaze/venues?_bookings=true&sort=created`,
+    {
+      headers,
+    },
+  );
   if (!response.ok) throw new Error('Failed to fetch venues');
   return response.json();
 };
@@ -62,5 +69,28 @@ export const signup = async (credentials: {
   });
 
   if (!response.ok) throw new Error('Failed to signup');
+  return response.json();
+};
+
+export const bookVenue = async (
+  token: string,
+  booking: {
+    dateFrom: Date | undefined;
+    dateTo: Date | undefined;
+    guests: number;
+    venueId: string;
+  },
+) => {
+  const response = await fetch(`${API_URL}/holidaze/bookings`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(booking),
+  });
+
+  if (!response.ok) throw new Error('Failed to book venue');
   return response.json();
 };
