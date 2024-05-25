@@ -3,7 +3,12 @@ import type { VenueType } from '@/types/venue';
 import type { FilterCriteria } from '@/types/filter';
 import { StateCreator } from 'zustand';
 import { filterVenues } from '@/utils/filterVenues';
-import { fetchAllVenues, fetchSingleVenue, searchVenues } from '@/api/api';
+import {
+  fetchAllVenues,
+  fetchSingleVenue,
+  searchVenues,
+  bookVenue,
+} from '@/api/api';
 
 export type VenueSlice = {
   venues: VenueType[];
@@ -11,6 +16,7 @@ export type VenueSlice = {
   meta: MetaType;
   loading: boolean;
   error: string | null;
+  bookSuccess: boolean;
   bookingDateRange: { from: Date | undefined; to: Date | undefined } | null;
   setBookingDateRange: (dateRange: {
     from: Date | undefined;
@@ -19,6 +25,15 @@ export type VenueSlice = {
   fetchAllVenues: (filterCriteria: FilterCriteria) => Promise<void>;
   fetchSingleVenue: (id: string | undefined) => Promise<void>;
   searchVenues: (query: string, filterCriteria: FilterCriteria) => void;
+  bookVenue: (
+    token: string,
+    booking: {
+      dateFrom: Date | undefined;
+      dateTo: Date | undefined;
+      guests: number;
+      venueId: string;
+    },
+  ) => void;
 };
 
 export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
@@ -27,9 +42,10 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
   meta: {} as MetaType,
   loading: false,
   error: null,
+  bookSuccess: false,
   bookingDateRange: null,
 
-  fetchAllVenues: async (filterCriteria: FilterCriteria) => {
+  fetchAllVenues: async (filterCriteria) => {
     set({ loading: true, error: null });
     try {
       const data = await fetchAllVenues();
@@ -46,7 +62,7 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
     }
   },
 
-  fetchSingleVenue: async (id: string | undefined) => {
+  fetchSingleVenue: async (id) => {
     if (!id) {
       throw new Error('ID is required to fetch a single venue');
     }
@@ -59,7 +75,7 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
     }
   },
 
-  searchVenues: async (query: string, filterCriteria: FilterCriteria) => {
+  searchVenues: async (query, filterCriteria) => {
     set({ loading: true, error: null });
     try {
       const data = await searchVenues(query);
@@ -78,5 +94,19 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
 
   setBookingDateRange: (dateRange) => {
     set({ bookingDateRange: dateRange });
+  },
+
+  bookVenue: async (token, booking) => {
+    set({ loading: true, error: null, bookSuccess: false });
+    try {
+      await bookVenue(token, booking);
+      set({ loading: false, bookSuccess: true });
+    } catch (error) {
+      set({
+        error: (error as Error).message,
+        loading: false,
+        bookSuccess: false,
+      });
+    }
   },
 });
