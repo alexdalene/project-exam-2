@@ -4,13 +4,38 @@ import type { VenueType } from '@/types/venue';
 import { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { format, parseISO, compareAsc, isAfter } from 'date-fns';
+import { format, isSameDay, eachDayOfInterval } from 'date-fns';
+
+const POPULAR_BOOKING_COUNT = 15;
 
 const Venue = ({ id, media, location, rating, price, bookings }: VenueType) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [earliestBooking, setEarliestBooking] = useState<string | null>(null);
   const [isPopular, setIsPopular] = useState(false);
+
+  const getEarliestAvailableDate = () => {
+    const today = new Date();
+
+    // Create an array of booked dates
+    const bookedDates = bookings.flatMap((booking) =>
+      eachDayOfInterval({
+        start: booking.dateFrom,
+        end: booking.dateTo,
+      }),
+    );
+
+    // Find the earliest date not in the past and not booked
+    let earliestAvailable = today;
+
+    while (bookedDates.some((date) => isSameDay(date, earliestAvailable))) {
+      earliestAvailable = new Date(
+        earliestAvailable.setDate(earliestAvailable.getDate() + 1),
+      );
+    }
+
+    return earliestAvailable;
+  };
 
   useEffect(() => {
     const img = new Image();
@@ -20,21 +45,13 @@ const Venue = ({ id, media, location, rating, price, bookings }: VenueType) => {
     img.onerror = () => setIsError(true);
 
     if (bookings && bookings.length > 0) {
-      const now = new Date();
-      const futureBookings = bookings
-        .map((booking) => parseISO(booking.dateFrom))
-        .filter((date) => isAfter(date, now))
-        .sort(compareAsc);
-
-      if (futureBookings.length > 0) {
-        setEarliestBooking(format(futureBookings[0], 'MMM do'));
-      }
+      const earliestAvailableDate = getEarliestAvailableDate();
+      setEarliestBooking(format(earliestAvailableDate, 'MMM d'));
     } else {
-      const now = new Date();
-      setEarliestBooking(format(now, 'MMM do'));
+      setEarliestBooking('Today');
     }
 
-    if (bookings && bookings.length >= 15) {
+    if (bookings && bookings.length >= POPULAR_BOOKING_COUNT) {
       setIsPopular(true);
     }
   }, [media, bookings]);
@@ -71,7 +88,7 @@ const Venue = ({ id, media, location, rating, price, bookings }: VenueType) => {
             {isPopular && (
               <Badge
                 variant="secondary"
-                className="absolute left-3 top-3 shadow-md"
+                className="absolute left-3 top-3 shadow-md hover:bg-secondary"
               >
                 Popular
               </Badge>
@@ -82,9 +99,7 @@ const Venue = ({ id, media, location, rating, price, bookings }: VenueType) => {
                   {location.city + ', ' + location.country}
                 </h2>
                 {earliestBooking && (
-                  <p className="truncate  text-muted-foreground">
-                    {earliestBooking}
-                  </p>
+                  <p className="text-muted-foreground">{earliestBooking}</p>
                 )}
               </div>
               {rating !== 0 && (
