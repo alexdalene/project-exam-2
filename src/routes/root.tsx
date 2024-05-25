@@ -1,5 +1,7 @@
 import Navbar from '@/components/navbar/Navbar';
+import Footer from '@/components/footer/Footer';
 import Loading from '@/loading';
+import { Toaster } from '@/components/ui/toaster';
 
 import { Leva } from 'leva';
 import { useEffect, useState } from 'react';
@@ -23,6 +25,10 @@ const Root = () => {
       <Navbar />
 
       <Outlet />
+
+      <Toaster />
+
+      <Footer />
 
       <Leva hidden={hash} collapsed />
     </>
