@@ -1,6 +1,8 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+
 import type { VenueType } from '@/types/venue';
+
 import { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
