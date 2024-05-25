@@ -31,7 +31,7 @@ const VenuesAll = () => {
       {!error && (
         <>
           <div
-            className="grid grid-cols-1 gap-x-4 gap-y-8 px-4 pt-8 sm:grid-cols-2 md:grid-cols-3 md:px-8 lg:grid-cols-4 lg:px-16"
+            className="grid grid-cols-1 gap-x-4 gap-y-8 px-4 pt-8 sm:grid-cols-2  md:grid-cols-3 md:px-8 lg:grid-cols-4 lg:px-16"
             aria-busy={loading}
             aria-live="polite"
           >
