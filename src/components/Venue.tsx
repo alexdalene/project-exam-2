@@ -66,11 +66,11 @@ const Venue = ({ id, media, location, rating, price, bookings }: VenueType) => {
         <div className="flex h-fit w-full flex-col bg-background">
           <Skeleton className="aspect-square h-full w-full object-cover" />
           <div className="mt-2 flex gap-4">
-            <Skeleton className="h-[20px] w-full max-w-full" />
-            <Skeleton className="h-[20px] w-full min-w-[50px] max-w-full flex-1" />
+            <Skeleton className="h-4 w-full max-w-full" />
+            <Skeleton className="h-4 w-full min-w-[50px] max-w-full flex-1" />
           </div>
-          <Skeleton className="mt-2 h-[20px] w-[100px]" />
-          <Skeleton className="mt-4 h-[20px] w-[150px]" />
+          <Skeleton className="mt-2 h-4 w-[100px]" />
+          <Skeleton className="mt-4 h-4 w-[150px]" />
         </div>
       ) : (
         <Link

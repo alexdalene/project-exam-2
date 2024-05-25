@@ -242,18 +242,22 @@ const VenuesSingle = () => {
         </div>
 
         {loading ? (
-          <div className="flex flex-col gap-2 px-4">
-            <Skeleton className="h-6 w-[250px]" />
-            <Skeleton className="mt-2 h-6 w-[200px]" />
-            <Skeleton className="h-6 w-[150px]" />
-            <Skeleton className="mt-2 h-6 w-[50px]" />
+          <div className="space-y-4 px-4">
+            <Skeleton className="h-4 w-[250px]" />
+            <div className="space-y-1">
+              <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-4 w-[150px]" />
+            </div>
+            <Skeleton className="h-4 w-[50px]" />
             <Separator className="my-8" />
             <div className="flex items-center gap-4">
               <Skeleton className="h-14 w-14 rounded-full" />
-              <Skeleton className="h-6 w-[100px]" />
+              <Skeleton className="h-4 w-[100px]" />
             </div>
             <Separator className="my-8" />
-            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[230px]" />
+            <Skeleton className="h-4 w-[200px]" />
           </div>
         ) : (
           <div className="w-full px-4 md:px-0">
