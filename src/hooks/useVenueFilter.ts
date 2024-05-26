@@ -2,7 +2,7 @@ import { useFilterState } from './useFilterState';
 import useStore from '@/store/venueStore';
 
 export const useVenueFilter = () => {
-  const { setFilterState } = useFilterState();
+  const { page, setFilterState } = useFilterState();
   const { fetchAllVenues } = useStore();
 
   const filterCriteria = {
@@ -13,7 +13,7 @@ export const useVenueFilter = () => {
 
   const resetFiltersAndFetchVenues = async () => {
     setFilterState(filterCriteria);
-    fetchAllVenues(filterCriteria);
+    fetchAllVenues(page, filterCriteria);
   };
 
   return { resetFiltersAndFetchVenues };

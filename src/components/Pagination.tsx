@@ -7,20 +7,35 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-
 import type { MetaType } from '@/types/response';
-
 import { useEffect } from 'react';
 import { useFilterState } from '@/hooks/useFilterState';
+import { useSearchParams } from 'react-router-dom';
 
 const PaginationComponent = ({ meta }: { meta: MetaType }) => {
   const { page, setFilterState } = useFilterState();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     if (page !== meta.currentPage) {
-      setFilterState({ page: meta.currentPage || 1 });
+      setFilterState({ page: meta.currentPage });
     }
   }, [meta.currentPage]);
+
+  const handlePageChange = (newPage: number | null) => {
+    if (newPage !== null) {
+      setFilterState({ page: newPage });
+    }
+  };
+
+  const generateUrlWithPage = (newPage: number | null) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (newPage) {
+      params.set('page', newPage.toString());
+    }
+    return `?${params.toString()}`;
+  };
 
   return (
     <Pagination>
@@ -29,14 +44,14 @@ const PaginationComponent = ({ meta }: { meta: MetaType }) => {
           <>
             <PaginationItem>
               <PaginationPrevious
-                to={`?page=${meta.previousPage}`}
-                onClick={() => setFilterState({ page: meta.previousPage })}
+                to={generateUrlWithPage(meta.previousPage)}
+                onClick={() => handlePageChange(meta.previousPage)}
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationLink
-                to={`?page=${meta.previousPage}`}
-                onClick={() => setFilterState({ page: meta.previousPage })}
+                to={generateUrlWithPage(meta.previousPage)}
+                onClick={() => handlePageChange(meta.previousPage)}
               >
                 {meta.previousPage}
               </PaginationLink>
@@ -45,9 +60,9 @@ const PaginationComponent = ({ meta }: { meta: MetaType }) => {
         )}
         <PaginationItem>
           <PaginationLink
-            to={`?page=${meta.currentPage}`}
+            to={generateUrlWithPage(meta.currentPage)}
             isActive
-            onClick={() => setFilterState({ page: meta.currentPage })}
+            onClick={() => handlePageChange(meta.currentPage)}
           >
             {meta.currentPage}
           </PaginationLink>
@@ -56,20 +71,19 @@ const PaginationComponent = ({ meta }: { meta: MetaType }) => {
           <>
             <PaginationItem>
               <PaginationLink
-                to={`?page=${meta.nextPage}`}
-                onClick={() => setFilterState({ page: meta.nextPage })}
+                to={generateUrlWithPage(meta.nextPage)}
+                onClick={() => handlePageChange(meta.nextPage)}
               >
                 {meta.nextPage}
               </PaginationLink>
             </PaginationItem>
-
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
-                to={`?page=${meta.nextPage}`}
-                onClick={() => setFilterState({ page: meta.nextPage })}
+                to={generateUrlWithPage(meta.nextPage)}
+                onClick={() => handlePageChange(meta.nextPage)}
               />
             </PaginationItem>
           </>
