@@ -5,24 +5,24 @@ import { useVenueFilter } from '@/hooks/useVenueFilter';
 import Venue from '@/components/Venue';
 import PaginationComponent from '@/components/Pagination';
 import Search from '@/components/Search';
-
-import { useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
+
+import { useEffect } from 'react';
 
 const VenuesAll = () => {
   const { venues, meta, loading, error, fetchAllVenues, searchVenues } =
     useStore();
-  const { price, amenities, guests, query } = useFilterState();
+  const { price, amenities, guests, query, page } = useFilterState();
   const { resetFiltersAndFetchVenues } = useVenueFilter();
 
   useEffect(() => {
     if (query !== '') {
       searchVenues(query, { price, amenities, guests });
     } else {
-      fetchAllVenues({ price, amenities, guests });
+      fetchAllVenues(page, { price, amenities, guests });
     }
-  }, [fetchAllVenues, searchVenues]);
+  }, [fetchAllVenues, searchVenues, page]);
 
   return (
     <>
@@ -55,9 +55,7 @@ const VenuesAll = () => {
       )}
 
       <Separator className="mt-8" />
-      {meta && venues.length > 0 && venues.length >= 99 && (
-        <PaginationComponent meta={meta} />
-      )}
+      {meta && venues.length > 0 && <PaginationComponent meta={meta} />}
     </>
   );
 };

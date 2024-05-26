@@ -22,7 +22,10 @@ export type VenueSlice = {
     from: Date | undefined;
     to: Date | undefined;
   }) => void;
-  fetchAllVenues: (filterCriteria: FilterCriteria) => Promise<void>;
+  fetchAllVenues: (
+    page: number,
+    filterCriteria: FilterCriteria,
+  ) => Promise<void>;
   fetchSingleVenue: (id: string | undefined) => Promise<void>;
   searchVenues: (query: string, filterCriteria: FilterCriteria) => void;
   bookVenue: (
@@ -45,10 +48,10 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
   bookSuccess: false,
   bookingDateRange: null,
 
-  fetchAllVenues: async (filterCriteria) => {
+  fetchAllVenues: async (page, filterCriteria) => {
     set({ loading: true, error: null });
     try {
-      const data = await fetchAllVenues();
+      const data = await fetchAllVenues(page);
       const venues = filterCriteria
         ? filterVenues(data.data, filterCriteria)
         : data.data;

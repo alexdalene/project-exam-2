@@ -5,6 +5,7 @@ type FilterState = {
   amenities: string[];
   guests: number | string;
   query: string;
+  page: number | null;
 };
 
 export const useFilterState = () => {
@@ -30,10 +31,11 @@ export const useFilterState = () => {
   const amenities = getStringArrayParam('amenities');
   const guests = getParam<string>('guests', '');
   const query = getParam<string>('q', '');
+  const page = getParam<number>('page', 1);
 
   const setFilterState = (newState: Partial<FilterState>) => {
     // Get the current state
-    const currentState = { price, amenities, guests, query };
+    const currentState = { price, amenities, guests, query, page };
 
     // Merge the current state with the new state
     const updatedState = { ...currentState, ...newState };
@@ -58,8 +60,12 @@ export const useFilterState = () => {
       params.set('q', updatedState.query);
     }
 
+    if (updatedState.page !== 1) {
+      params.set('page', String(updatedState.page));
+    }
+
     setSearchParams(params);
   };
 
-  return { price, amenities, guests, query, setFilterState };
+  return { price, amenities, guests, query, page, setFilterState };
 };
