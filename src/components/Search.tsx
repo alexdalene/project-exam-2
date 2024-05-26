@@ -9,7 +9,8 @@ import { useEffect, useState } from 'react';
 const Search = () => {
   const { searchVenues, fetchAllVenues } = useStore();
   const [isQueryChanged, setIsQueryChanged] = useState(false);
-  const { price, amenities, guests, query, setFilterState } = useFilterState();
+  const { price, amenities, guests, query, page, setFilterState } =
+    useFilterState();
 
   useEffect(() => {
     const filterCriteria = { price, amenities, guests, query };
@@ -18,7 +19,7 @@ const Search = () => {
       searchVenues(query, filterCriteria);
       setIsQueryChanged(true);
     } else if (isQueryChanged) {
-      fetchAllVenues(filterCriteria);
+      fetchAllVenues(page, filterCriteria);
     }
   }, [query, searchVenues, fetchAllVenues, isQueryChanged]);
 

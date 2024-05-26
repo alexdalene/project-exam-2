@@ -12,7 +12,7 @@ import { DrawerClose, DrawerFooter } from '@/components/ui/drawer';
 import { Separator } from '@/components/ui/separator';
 
 const Panel = ({ component }: { component: string }) => {
-  const { price, amenities, guests, setFilterState } = useFilterState();
+  const { price, amenities, guests, page, setFilterState } = useFilterState();
   const { resetFiltersAndFetchVenues } = useVenueFilter();
 
   const { fetchAllVenues } = useStore();
@@ -49,7 +49,7 @@ const Panel = ({ component }: { component: string }) => {
   const handleSearch = () => {
     const filterCriteria = { price, amenities, guests };
     setFilterState(filterCriteria);
-    fetchAllVenues(filterCriteria);
+    fetchAllVenues(page, filterCriteria);
   };
 
   return (

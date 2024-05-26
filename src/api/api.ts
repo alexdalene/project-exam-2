@@ -9,9 +9,9 @@ const headers = {
   'X-Noroff-API-Key': API_KEY,
 };
 
-export const fetchAllVenues = async () => {
+export const fetchAllVenues = async (page: number = 1) => {
   const response = await fetch(
-    `${API_URL}/holidaze/venues?_bookings=true&sort=created`,
+    `${API_URL}/holidaze/venues?_bookings=true&sort=created&page=${page}`,
     {
       headers,
     },
