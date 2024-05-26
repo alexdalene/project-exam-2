@@ -44,7 +44,7 @@ const NavbarUser = () => {
             </>
           ) : (
             <>
-              <Link to="/profile">
+              <Link to={`/profile/${user.name}`}>
                 <DropdownMenuItem>
                   <User size={16} />
                   Profile

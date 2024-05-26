@@ -94,3 +94,17 @@ export const bookVenue = async (
   if (!response.ok) throw new Error('Failed to book venue');
   return response.json();
 };
+
+export const fetchProfile = async (
+  token: string | null,
+  name: string | undefined,
+) => {
+  const response = await fetch(`${API_URL}/holidaze/profiles/${name}`, {
+    headers: {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) throw new Error('Failed to fetch user');
+  return response.json();
+};

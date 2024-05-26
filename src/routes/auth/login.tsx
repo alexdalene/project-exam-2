@@ -37,7 +37,7 @@ const AuthLoginSchema = z.object({
 });
 
 const AuthLogin = () => {
-  const { login, userLoading, userSuccess } = useStore();
+  const { login, userLoading, userSuccess, user } = useStore();
   const navigate = useNavigate();
   const location = useLocation() as { state: { email: string } };
   const { email } = location.state || '';
@@ -58,7 +58,7 @@ const AuthLogin = () => {
 
   useEffect(() => {
     if (userSuccess && !userLoading && isSent) {
-      navigate('/profile');
+      navigate(`/profile/${user?.name}`);
     }
   }, [userSuccess, userLoading, isSent]);
 
