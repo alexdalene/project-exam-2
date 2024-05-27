@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Book, Home, LogIn, LogOut, Plus, User, UserPlus } from 'lucide-react';
+import { LogIn, LogOut, Plus, User, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import useStore from '@/store/venueStore';
 
@@ -50,24 +50,11 @@ const NavbarUser = () => {
                   Profile
                 </DropdownMenuItem>
               </Link>
-              <Link to="/profile/venues">
-                <DropdownMenuItem>
-                  <Home size={16} />
-                  Venues
-                </DropdownMenuItem>
-              </Link>
-              <Link to="/profile/bookings">
-                <DropdownMenuItem>
-                  <Book size={16} />
-                  Bookings
-                </DropdownMenuItem>
-              </Link>
             </>
           )}
         </DropdownMenuGroup>
         {user && (
           <>
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <Link to="/venues/create">
                 <DropdownMenuItem>
