@@ -39,6 +39,9 @@ type VenueUserType = {
   bio: string;
   avatar: { url: string; alt: string };
   banner: { url: string; alt: string };
+  bookings: VenueBookingsType[] | null;
+  venues: VenueType[] | null;
+  _count: { bookings: number; venues: number };
 };
 
 type VenueBookingsType = {

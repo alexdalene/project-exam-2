@@ -99,12 +99,38 @@ export const fetchProfile = async (
   token: string | null,
   name: string | undefined,
 ) => {
+  const response = await fetch(
+    `${API_URL}/holidaze/profiles/${name}?_bookings=true&_venues=true`,
+    {
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  if (!response.ok) throw new Error('Failed to fetch user');
+  return response.json();
+};
+
+export const updateProfile = async (
+  token: string | null,
+  name: string | undefined,
+  profile: {
+    bio: string;
+    avatar: { url: string; alt: string };
+    banner: { url: string; alt: string };
+  },
+) => {
   const response = await fetch(`${API_URL}/holidaze/profiles/${name}`, {
+    method: 'PUT',
     headers: {
       ...headers,
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     },
+    body: JSON.stringify(profile),
   });
-  if (!response.ok) throw new Error('Failed to fetch user');
+
+  if (!response.ok) throw new Error('Failed to update profile');
   return response.json();
 };
