@@ -38,6 +38,7 @@ const ProfileForm = () => {
       avatar: { url: values.avatar, alt: 'Avatar' },
       banner: { url: values.banner, alt: 'Banner' },
       bio: values.bio,
+      venueManager: profile?.venueManager,
     };
 
     updateProfile(token, profile?.name, updated);
