@@ -12,18 +12,20 @@ const Profile = () => {
 
   useEffect(() => {
     fetchProfile(token, name);
-  }, [fetchProfile]);
+  }, [fetchProfile, name]);
 
   useEffect(() => {
     if (name === user?.name) {
       setIsUser(true);
+    } else {
+      setIsUser(false);
     }
   }, [name]);
 
   return (
-    <div className="mt-14 min-h-svh">
+    <div className="mt-14 min-h-[calc(100svh-56px)]">
       <div className="flex flex-col px-4 md:px-8 lg:flex-row lg:gap-16 lg:px-16 lg:pt-16">
-        <div className="flex w-full max-w-[768px] flex-col gap-8 pt-16 lg:pt-0">
+        <div className="flex w-full max-w-[768px] flex-1 flex-col gap-8 pt-16 lg:pt-0">
           <div className="flex gap-2">
             <div className="h-10 w-10 overflow-hidden rounded-xl">
               <img
