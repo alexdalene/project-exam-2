@@ -11,9 +11,10 @@ export type ProfileSlice = {
     token: string | null,
     name: string | undefined,
     profile: {
-      bio: string;
+      bio: string | undefined;
       avatar: { url: string; alt: string };
       banner: { url: string; alt: string };
+      venueManager: boolean | undefined;
     },
   ) => void;
 };

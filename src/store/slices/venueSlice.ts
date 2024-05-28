@@ -1,42 +1,31 @@
 import type { MetaType } from '@/types/response';
 import type { VenueType } from '@/types/venue';
 import type { FilterCriteria } from '@/types/filter';
+import type { FormVenue } from '@/types/form';
 import { StateCreator } from 'zustand';
 import { filterVenues } from '@/utils/filterVenues';
 import {
   fetchAllVenues,
   fetchSingleVenue,
   searchVenues,
-  bookVenue,
+  createVenue,
 } from '@/api/api';
 
 export type VenueSlice = {
   venues: VenueType[];
   venue: VenueType | null;
+  venueId: string | null;
+  resetVenueId: () => void;
   meta: MetaType;
   loading: boolean;
   error: string | null;
-  bookSuccess: boolean;
-  bookingDateRange: { from: Date | undefined; to: Date | undefined } | null;
-  setBookingDateRange: (dateRange: {
-    from: Date | undefined;
-    to: Date | undefined;
-  }) => void;
   fetchAllVenues: (
     page: number,
     filterCriteria: FilterCriteria,
   ) => Promise<void>;
   fetchSingleVenue: (id: string | undefined) => Promise<void>;
   searchVenues: (query: string, filterCriteria: FilterCriteria) => void;
-  bookVenue: (
-    token: string,
-    booking: {
-      dateFrom: Date | undefined;
-      dateTo: Date | undefined;
-      guests: number;
-      venueId: string;
-    },
-  ) => void;
+  createVenue: (token: string | null, venue: FormVenue) => void;
 };
 
 export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
@@ -45,8 +34,9 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
   meta: {} as MetaType,
   loading: false,
   error: null,
-  bookSuccess: false,
-  bookingDateRange: null,
+  venueId: null,
+
+  resetVenueId: () => set({ venueId: null }),
 
   fetchAllVenues: async (page, filterCriteria) => {
     set({ loading: true, error: null });
@@ -95,21 +85,13 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
     }
   },
 
-  setBookingDateRange: (dateRange) => {
-    set({ bookingDateRange: dateRange });
-  },
-
-  bookVenue: async (token, booking) => {
-    set({ loading: true, error: null, bookSuccess: false });
+  createVenue: async (token, venue) => {
+    set({ loading: true, error: null, venueId: null });
     try {
-      await bookVenue(token, booking);
-      set({ loading: false, bookSuccess: true });
+      const data = await createVenue(token, venue);
+      set({ loading: false, venueId: data.data.id });
     } catch (error) {
-      set({
-        error: (error as Error).message,
-        loading: false,
-        bookSuccess: false,
-      });
+      set({ error: (error as Error).message, loading: false, venueId: null });
     }
   },
 });

@@ -116,9 +116,10 @@ export const updateProfile = async (
   token: string | null,
   name: string | undefined,
   profile: {
-    bio: string;
+    bio: string | undefined;
     avatar: { url: string; alt: string };
     banner: { url: string; alt: string };
+    venueManager: boolean | undefined;
   },
 ) => {
   const response = await fetch(`${API_URL}/holidaze/profiles/${name}`, {
@@ -132,5 +133,72 @@ export const updateProfile = async (
   });
 
   if (!response.ok) throw new Error('Failed to update profile');
+  return response.json();
+};
+
+export const updateBooking = async (
+  token: string | null,
+  id: string,
+  booking: {
+    dateFrom: Date | undefined;
+    dateTo: Date | undefined;
+    guests: number;
+  },
+) => {
+  const response = await fetch(`${API_URL}/holidaze/bookings/${id}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(booking),
+  });
+
+  if (!response.ok) throw new Error('Failed to update booking');
+  return response.json();
+};
+
+export const deleteBooking = async (token: string | null, id: string) => {
+  const response = await fetch(`${API_URL}/holidaze/bookings/${id}`, {
+    method: 'DELETE',
+    headers: {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to delete booking');
+  return response.json();
+};
+
+export const createVenue = async (
+  token: string | null,
+  venue: {
+    name: string;
+    description: string;
+    price: number | '' | undefined;
+    maxGuests: number | '' | undefined;
+    media: [{ url: string; alt: string }];
+    meta: { [key: string]: boolean };
+    location: {
+      country: string;
+      city: string;
+      address: string;
+      zip: string;
+    };
+  },
+) => {
+  const response = await fetch(`${API_URL}/holidaze/venues`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(venue),
+  });
+
+  if (!response.ok) throw new Error('Failed to create venue');
   return response.json();
 };
