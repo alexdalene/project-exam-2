@@ -179,7 +179,7 @@ export const createVenue = async (
     description: string;
     price: number | '' | undefined;
     maxGuests: number | '' | undefined;
-    media: [{ url: string; alt: string }];
+    media: [{ url: string; alt?: string | undefined }];
     meta: { [key: string]: boolean };
     location: {
       country: string;
