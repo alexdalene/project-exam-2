@@ -8,12 +8,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Book, Home, LogIn, LogOut, Plus, User, UserPlus } from 'lucide-react';
+import { LogIn, LogOut, Plus, User, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import useStore from '@/store/venueStore';
+import { useNavigate } from 'react-router-dom';
 
 const NavbarUser = () => {
   const { user, logout } = useStore();
+  const navigate = useNavigate();
 
   return (
     <DropdownMenu>
@@ -44,22 +46,10 @@ const NavbarUser = () => {
             </>
           ) : (
             <>
-              <Link to="/profile">
+              <Link to={`/profile/${user.name}`}>
                 <DropdownMenuItem>
                   <User size={16} />
                   Profile
-                </DropdownMenuItem>
-              </Link>
-              <Link to="/profile/venues">
-                <DropdownMenuItem>
-                  <Home size={16} />
-                  Venues
-                </DropdownMenuItem>
-              </Link>
-              <Link to="/profile/bookings">
-                <DropdownMenuItem>
-                  <Book size={16} />
-                  Bookings
                 </DropdownMenuItem>
               </Link>
             </>
@@ -67,7 +57,6 @@ const NavbarUser = () => {
         </DropdownMenuGroup>
         {user && (
           <>
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <Link to="/venues/create">
                 <DropdownMenuItem>
@@ -77,7 +66,13 @@ const NavbarUser = () => {
               </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout} className="text-destructive">
+            <DropdownMenuItem
+              onClick={() => {
+                logout();
+                navigate('/auth');
+              }}
+              className="text-destructive"
+            >
               <LogOut size={16} />
               Logout
             </DropdownMenuItem>

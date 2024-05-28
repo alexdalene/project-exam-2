@@ -1,5 +1,5 @@
 import Navbar from '@/components/navbar/Navbar';
-import Footer from '@/components/footer/Footer';
+// import Footer from '@/components/footer/Footer';
 import Loading from '@/loading';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -28,7 +28,7 @@ const Root = () => {
 
       <Toaster />
 
-      <Footer />
+      {/* <Footer /> */}
 
       <Leva hidden={hash} collapsed />
     </>

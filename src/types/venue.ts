@@ -39,6 +39,10 @@ type VenueUserType = {
   bio: string;
   avatar: { url: string; alt: string };
   banner: { url: string; alt: string };
+  bookings: VenueBookingsType[];
+  venues: VenueType[];
+  _count: { bookings: number; venues: number };
+  venueManager: boolean;
 };
 
 type VenueBookingsType = {
@@ -49,6 +53,7 @@ type VenueBookingsType = {
   created: string;
   updated: string;
   customer: VenueUserType;
+  venue: VenueType;
 };
 
 export type { VenueType, VenueUserType };
