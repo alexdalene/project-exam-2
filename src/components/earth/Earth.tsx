@@ -2,19 +2,11 @@
 import * as THREE from 'three';
 import { Mesh } from 'three';
 import { useTexture, OrbitControls } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { useControls } from 'leva';
 
 // React
 import { useRef, useMemo, useCallback, useEffect } from 'react';
-
-// GSAP
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-// Store
-import { useTimelineStore } from '@/store/timeline';
 
 // Earth shaders
 import earthVertexShader from '@/assets/earth/shaders/vertex.glsl';
@@ -37,117 +29,6 @@ const Earth = () => {
   const sunRef = useRef<Mesh>(null!);
   const earthMaterial = useRef<THREE.ShaderMaterial>(null!);
   const atmosphereMaterial = useRef<THREE.ShaderMaterial>(null!);
-  const masterTimelineRef = useRef<gsap.core.Timeline>();
-
-  /**
-   * Store
-   */
-  const currentAct = useTimelineStore((state) => state.currentAct);
-  const updateAct = useTimelineStore((state) => state.updateAct);
-
-  /**
-   * GSAP
-   */
-  gsap.registerPlugin(useGSAP);
-  gsap.registerPlugin(ScrollTrigger);
-
-  const { camera } = useThree();
-  const { contextSafe } = useGSAP();
-
-  /**
-   * Timeline
-   */
-
-  // Act two
-  const actTwo = contextSafe(() => {
-    const tl = gsap.timeline({
-      defaults: { duration: 1.5, ease: 'none' },
-      onComplete: () => console.log('Act two completed'),
-    });
-
-    tl.to(
-      groupRef.current.rotation,
-      {
-        y: -Math.PI * 1,
-        z: -Math.PI * 0.5,
-      },
-      '<',
-    );
-
-    tl.to(
-      camera.position,
-      {
-        z: 15,
-      },
-      '<',
-    );
-
-    tl.to(
-      sunSpherical,
-      {
-        phi: 1.3,
-        theta: 0.7,
-        onUpdate: updateSun,
-      },
-      '<',
-    );
-
-    return tl;
-  });
-
-  // Act three
-  const actThree = contextSafe(() => {
-    const tl = gsap.timeline({
-      defaults: {
-        duration: 1.5,
-        ease: 'none',
-      },
-    });
-
-    tl.to(
-      camera.position,
-      {
-        y: 2,
-        z: 4,
-      },
-      '<',
-    );
-
-    return tl;
-  });
-
-  useGSAP(
-    () => {
-      if (!masterTimelineRef.current) {
-        masterTimelineRef.current = gsap.timeline({
-          scrollTrigger: {
-            trigger: 'body',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
-      }
-
-      const master = masterTimelineRef.current;
-
-      master.add(actTwo());
-      master.add(actThree());
-
-      if (currentAct === 1) {
-        master.tweenTo(0);
-      }
-
-      if (currentAct === 2) {
-        master.tweenTo(1.5);
-      }
-
-      if (currentAct === 3) {
-        master.tweenTo(3);
-      }
-    },
-    { dependencies: [currentAct] },
-  );
 
   /**
    * Textures
@@ -200,21 +81,14 @@ const Earth = () => {
    * Animate
    */
   useFrame((_state, delta) => {
-    if (currentAct === 1) {
-      groupRef.current.rotation.y -= delta * 0.05;
-      groupRef.current.rotation.x += delta * 0.05;
-    }
+    const time = performance.now() * 0.001; // get time in seconds
+    const oscillation = Math.sin(time); // oscillates between -1 and 1
 
-    if (currentAct === 2) {
-      const time = performance.now() * 0.001; // get time in seconds
-      const oscillation = Math.sin(time); // oscillates between -1 and 1
-
-      groupRef.current.rotation.y -=
-        delta * Math.cos(sunSpherical.theta) * oscillation * 0.08;
-      groupRef.current.rotation.x +=
-        delta * Math.sin(sunSpherical.theta) * oscillation * 0.08;
-      groupRef.current.position.y = oscillation * 0.1;
-    }
+    groupRef.current.rotation.y -=
+      delta * Math.cos(sunSpherical.theta) * oscillation * 0.08;
+    groupRef.current.rotation.x +=
+      delta * Math.sin(sunSpherical.theta) * oscillation * 0.08;
+    groupRef.current.position.y = oscillation * 0.1;
   });
 
   /**
@@ -249,16 +123,8 @@ const Earth = () => {
 
   // Enable controls
   const { enableControls, showDebugSun } = useControls('Controls', {
-    enableControls: false,
+    enableControls: true,
     showDebugSun: false,
-  });
-
-  // Update act
-  useControls('State', {
-    changeAct: {
-      options: [1, 2, 3],
-      onChange: (value) => updateAct(value),
-    },
   });
 
   // Earth position
@@ -273,14 +139,14 @@ const Earth = () => {
 
   return (
     <>
-      {(enableControls || currentAct === 2) && <OrbitControls />}
+      {enableControls && <OrbitControls enableDamping />}
 
       <group
         position={[position.x, position.y, 0]}
         ref={groupRef}
         rotation={[rotation.x, rotation.y, rotation.z]}
       >
-        {currentAct === 2 && <EarthMenu />}
+        <EarthMenu />
 
         {/* Earth */}
         <mesh ref={earthRef}>
