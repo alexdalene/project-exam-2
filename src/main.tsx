@@ -17,8 +17,6 @@ import AuthSignup from './routes/auth/signup';
 
 // Profile
 import Profile from './routes/profile';
-import ProfileVenues from './routes/profile/venues';
-import ProfileBookings from './routes/profile/bookings';
 
 // Error
 import Error from './error';
@@ -73,16 +71,6 @@ const router = createBrowserRouter([
       {
         path: 'profile/:name',
         element: <Profile />,
-        children: [
-          {
-            path: 'venues',
-            element: <ProfileVenues />,
-          },
-          {
-            path: 'bookings',
-            element: <ProfileBookings />,
-          },
-        ],
       },
     ],
   },
