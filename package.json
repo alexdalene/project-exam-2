@@ -41,6 +41,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-three/drei": "^9.105.5",
     "@react-three/fiber": "8.15",
+    "@types/react-helmet": "^6.1.11",
     "@types/three": "^0.164.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

@@ -20,7 +20,7 @@ const App = () => {
 
       <main>
         <section className="mx-auto grid min-h-dvh max-w-[1400px] p-4 md:p-8">
-          <div className="flex justify-between">
+          <div className="flex items-end justify-between">
             <div className="flex flex-col-reverse">
               <h1 className="text-4xl font-medium uppercase md:text-6xl">
                 Holidaze
