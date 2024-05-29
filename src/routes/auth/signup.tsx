@@ -25,6 +25,7 @@ import { useForm } from 'react-hook-form';
 import useStore from '@/store/venueStore';
 import { LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 
 const AuthSignupSchema = z.object({
   name: z
@@ -65,83 +66,98 @@ const AuthSignup = () => {
   }, [userSuccess, userLoading, isSent]);
 
   return (
-    <Card className="max-w-[360px]">
-      <CardHeader>
-        <CardTitle>Sign up</CardTitle>
-        <CardDescription>
-          Create an account to access all the features of the app.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input type="text" placeholder="Name" {...field} required />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Email"
-                      {...field}
-                      required
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      {...field}
-                      required
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <CardFooter className="flex flex-col gap-4">
-              <Button className="w-full" type="submit">
-                Sign up
-                {userLoading && (
-                  <LoaderCircle size={20} className="animate-spin" />
+    <>
+      <Helmet>
+        <title>Holidaze | Sign up</title>
+        <meta
+          name="description"
+          content="Create an account to access all the features of the app."
+        />
+      </Helmet>
+
+      <Card className="max-w-[360px]">
+        <CardHeader>
+          <CardTitle>Sign up</CardTitle>
+          <CardDescription>
+            Create an account to access all the features of the app.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Name"
+                        {...field}
+                        required
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </Button>
-              <div className="text-sm">
-                Already have an account?{' '}
-                <Link to="/auth" className="underline">
-                  Login
-                </Link>
-              </div>
-            </CardFooter>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Email"
+                        {...field}
+                        required
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        {...field}
+                        required
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <CardFooter className="flex flex-col gap-4">
+                <Button className="w-full" type="submit">
+                  Sign up
+                  {userLoading && (
+                    <LoaderCircle size={20} className="animate-spin" />
+                  )}
+                </Button>
+                <div className="text-sm">
+                  Already have an account?{' '}
+                  <Link to="/auth" className="underline">
+                    Login
+                  </Link>
+                </div>
+              </CardFooter>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

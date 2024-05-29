@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ArrowDown } from 'lucide-react';
+import { Helmet } from 'react-helmet';
 
 const App = () => {
   const firstActRef = useRef(null!);
@@ -78,6 +79,16 @@ const App = () => {
 
   return (
     <>
+      <Helmet>
+        <meta
+          name="description"
+          content="
+          Holidaze is a platform that allows you to easily create and manage your own venues. We have created a system that is simple, easy to use, and secure. Our platform is designed to be accessible to everyone, and we take security very seriously.
+        "
+        />
+        <title>Holidaze</title>
+      </Helmet>
+
       <main>
         <section
           ref={firstActRef}
