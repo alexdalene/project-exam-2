@@ -3,7 +3,7 @@ type FormVenue = {
   description: string;
   price: number | '' | undefined;
   maxGuests: number | '' | undefined;
-  media: [{ url: string; alt?: string | undefined }];
+  media: { url: string; alt?: string | undefined }[];
   meta: { [key: string]: boolean };
   location: {
     country: string;

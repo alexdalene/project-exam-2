@@ -9,11 +9,14 @@ import {
   fetchSingleVenue,
   searchVenues,
   createVenue,
+  updateVenue,
+  deleteVenue,
 } from '@/api/api';
 
 export type VenueSlice = {
   venues: VenueType[];
   venue: VenueType | null;
+  resetVenue: () => void;
   venueId: string | null;
   resetVenueId: () => void;
   meta: MetaType;
@@ -26,6 +29,8 @@ export type VenueSlice = {
   fetchSingleVenue: (id: string | undefined) => Promise<void>;
   searchVenues: (query: string, filterCriteria: FilterCriteria) => void;
   createVenue: (token: string | null, venue: FormVenue) => void;
+  updateVenue: (token: string | null, id: string, venue: FormVenue) => void;
+  deleteVenue: (token: string | null, id: string) => void;
 };
 
 export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
@@ -35,6 +40,8 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
   loading: false,
   error: null,
   venueId: null,
+
+  resetVenue: () => set({ venue: null }),
 
   resetVenueId: () => set({ venueId: null }),
 
@@ -92,6 +99,26 @@ export const createVenueSlice: StateCreator<VenueSlice> = (set) => ({
       set({ loading: false, venueId: data.data.id });
     } catch (error) {
       set({ error: (error as Error).message, loading: false, venueId: null });
+    }
+  },
+
+  updateVenue: async (token, id, venue) => {
+    set({ loading: true, error: null });
+    try {
+      await updateVenue(token, id, venue);
+      set({ loading: false });
+    } catch (error) {
+      set({ error: (error as Error).message, loading: false });
+    }
+  },
+
+  deleteVenue: async (token, id) => {
+    set({ loading: true, error: null });
+    try {
+      await deleteVenue(token, id);
+      set({ loading: false });
+    } catch (error) {
+      set({ error: (error as Error).message, loading: false });
     }
   },
 });
