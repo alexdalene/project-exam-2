@@ -28,7 +28,6 @@ export const createProfileSlice: StateCreator<ProfileSlice> = (set) => ({
     set({ profileLoading: true, profileError: null });
     try {
       const data = await fetchProfile(token, name);
-      console.log(data);
       set({ profile: data.data, profileLoading: false });
     } catch (error) {
       set({ profileError: (error as Error).message, profileLoading: false });
@@ -39,7 +38,6 @@ export const createProfileSlice: StateCreator<ProfileSlice> = (set) => ({
     set({ profileLoading: true, profileError: null });
     try {
       const data = await updateProfile(token, name, profile);
-      console.log(data);
       set({ profile: data.data, profileLoading: false });
     } catch (error) {
       set({ profileError: (error as Error).message, profileLoading: false });

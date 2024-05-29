@@ -5,6 +5,7 @@ import {
   SheetTrigger,
   SheetTitle,
   SheetDescription,
+  SheetClose,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
@@ -23,17 +24,34 @@ const NavbarMenu = ({ links }: { links: { name: string; path: string }[] }) => {
         <SheetHeader>
           <SheetTitle>HOLIDAZE</SheetTitle>
           <SheetDescription>
-            A new and innovative to explore and create venues.
+            Venues from around the world, all in one place.
           </SheetDescription>
         </SheetHeader>
         <ul className="mt-8">
-          {links.map((link) => (
-            <li key={link.path}>
-              <Link to={link.path} className="block py-3">
-                {link.name}
-              </Link>
-            </li>
-          ))}
+          {links.map((link) => {
+            const isActive = window.location.pathname === link.path;
+
+            return (
+              <li key={link.path}>
+                <SheetClose asChild>
+                  <Link
+                    to={link.path}
+                    className={`
+                  block
+                  rounded-xl
+                  px-4
+                 py-3
+                  ${isActive ? 'bg-accent' : ''}
+                  ${!isActive ? 'bg-transparent' : ''}
+                
+                `}
+                  >
+                    {link.name}
+                  </Link>
+                </SheetClose>
+              </li>
+            );
+          })}
         </ul>
       </SheetContent>
     </Sheet>
