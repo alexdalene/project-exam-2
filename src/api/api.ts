@@ -179,7 +179,7 @@ export const createVenue = async (
     description: string;
     price: number | '' | undefined;
     maxGuests: number | '' | undefined;
-    media: [{ url: string; alt?: string | undefined }];
+    media: { url: string; alt?: string | undefined }[];
     meta: { [key: string]: boolean };
     location: {
       country: string;
@@ -200,5 +200,50 @@ export const createVenue = async (
   });
 
   if (!response.ok) throw new Error('Failed to create venue');
+  return response.json();
+};
+
+export const updateVenue = async (
+  token: string | null,
+  id: string,
+  venue: {
+    name: string;
+    description: string;
+    price: number | '' | undefined;
+    maxGuests: number | '' | undefined;
+    media: { url: string; alt?: string | undefined }[];
+    meta: { [key: string]: boolean };
+    location: {
+      country: string;
+      city: string;
+      address: string;
+      zip: string;
+    };
+  },
+) => {
+  const response = await fetch(`${API_URL}/holidaze/venues/${id}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(venue),
+  });
+
+  if (!response.ok) throw new Error('Failed to update venue');
+  return response.json();
+};
+
+export const deleteVenue = async (token: string | null, id: string) => {
+  const response = await fetch(`${API_URL}/holidaze/venues/${id}`, {
+    method: 'DELETE',
+    headers: {
+      ...headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to delete venue');
   return response.json();
 };
