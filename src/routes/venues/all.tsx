@@ -22,7 +22,7 @@ const VenuesAll = () => {
     } else {
       fetchAllVenues(page, { price, amenities, guests });
     }
-  }, [fetchAllVenues, searchVenues, page]);
+  }, [searchVenues, fetchAllVenues]);
 
   return (
     <>
@@ -55,7 +55,13 @@ const VenuesAll = () => {
       )}
 
       <Separator className="mt-8" />
-      {meta && venues.length > 0 && <PaginationComponent meta={meta} />}
+      {meta &&
+        venues.length > 0 &&
+        query === '' &&
+        price[0] === 100 &&
+        price[1] === 5000 &&
+        amenities.length === 0 &&
+        guests === '' && <PaginationComponent meta={meta} />}
     </>
   );
 };
