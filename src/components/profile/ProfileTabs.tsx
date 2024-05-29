@@ -7,16 +7,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { format } from 'date-fns';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import useStore from '@/store/venueStore';
-import { ScrollArea } from '@/components/ui/scroll-area';
+
+import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileTabs = () => {
   const { profile, profileLoading } = useStore();
+  const navigate = useNavigate();
 
   return (
-    <div className="mt-16 w-full max-w-[468px] flex-1 lg:mt-0">
+    <div className="mb-4 mt-16 w-full max-w-[468px] flex-1 lg:mt-0">
       <div>
         <Tabs defaultValue="venues">
           <TabsList>
@@ -25,7 +28,7 @@ const ProfileTabs = () => {
           </TabsList>
           <TabsContent value="venues">
             {!profileLoading && (profile?.venues?.length ?? 0) > 0 ? (
-              <ScrollArea className="h-fit max-h-[300px] w-full rounded-xl border">
+              <ScrollArea className="h-60 w-full rounded-xl border">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -37,7 +40,11 @@ const ProfileTabs = () => {
                   </TableHeader>
                   <TableBody>
                     {profile?.venues?.map((venue, index) => (
-                      <TableRow key={index} role="button">
+                      <TableRow
+                        key={index}
+                        role="button"
+                        onClick={() => navigate(`/venues/${venue.id}`)}
+                      >
                         <TableCell className="font-medium">
                           VEN0{index}
                         </TableCell>
@@ -56,7 +63,7 @@ const ProfileTabs = () => {
                 </Table>
               </ScrollArea>
             ) : (
-              <div className="grid h-[100px] w-full place-content-center rounded-xl border">
+              <div className="grid h-60 w-full place-content-center rounded-xl border">
                 <p className="text-sm text-muted-foreground">
                   No venues found.
                 </p>
@@ -65,7 +72,7 @@ const ProfileTabs = () => {
           </TabsContent>
           <TabsContent value="bookings">
             {!profileLoading && (profile?.bookings?.length ?? 0) > 0 ? (
-              <ScrollArea className="h-fit max-h-[300px] w-full rounded-xl border">
+              <ScrollArea className="h-60 w-full rounded-xl border">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -93,7 +100,7 @@ const ProfileTabs = () => {
                 </Table>
               </ScrollArea>
             ) : (
-              <div className="grid h-[100px] w-full place-content-center rounded-xl border">
+              <div className="grid h-60 w-full place-content-center rounded-xl border">
                 <p className="text-sm text-muted-foreground">
                   No bookings found.
                 </p>
