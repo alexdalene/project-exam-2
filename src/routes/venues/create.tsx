@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import VenueInfo from '@/components/venues/VenueInfo';
-import VenueImages from '@/components/venues/VenueImages';
-import VenueAmenities from '@/components/venues/VenueAmenities';
-import VenueLocation from '@/components/venues/VenueLocation';
+import VenueInfo from '@/components/create/VenueInfo';
+import VenueImages from '@/components/create/VenueImages';
+import VenueAmenities from '@/components/create/VenueAmenities';
+import VenueLocation from '@/components/create/VenueLocation';
 import useStore from '@/store/venueStore';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
