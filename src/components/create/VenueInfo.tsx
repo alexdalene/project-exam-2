@@ -14,8 +14,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import useStore from '@/store/venueStore';
 import { Link } from 'react-router-dom';
+import StarRating from './StarRating';
 
-const VenueInfoSchema = z.object({
+export const VenueInfoSchema = z.object({
   name: z
     .string()
     .min(3, { message: 'Title must be at least 3 characters long' })
@@ -42,6 +43,7 @@ const VenueInfoSchema = z.object({
       .max(50, { message: 'Guests must be at most 50' }),
     z.literal(''),
   ]),
+  rating: z.number().min(0).max(5).optional().default(0),
 });
 
 const VenueInfo = () => {
@@ -53,6 +55,7 @@ const VenueInfo = () => {
       description: storedForm.description || '',
       price: storedForm.price || '',
       maxGuests: storedForm.maxGuests || '',
+      rating: storedForm.rating || 0,
     },
   });
 
@@ -135,6 +138,22 @@ const VenueInfo = () => {
                   min="1"
                   max="50"
                   onChange={(e) => field.onChange(parseInt(e.target.value))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="rating"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Rating</FormLabel>
+              <FormControl>
+                <StarRating
+                  currentRating={field.value}
+                  onRatingSelected={(rating) => field.onChange(rating)}
                 />
               </FormControl>
               <FormMessage />

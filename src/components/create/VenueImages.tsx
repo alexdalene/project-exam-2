@@ -15,11 +15,12 @@ import { useEffect } from 'react';
 import { Plus, Trash } from 'lucide-react';
 import useStore from '@/store/venueStore';
 import { Separator } from '../ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-const VenueImagesSchema = z.object({
+export const VenueImagesSchema = z.object({
   media: z.array(
     z.object({
-      url: z.string().url(),
+      url: z.string().url({ message: 'Invalid URL' }),
       alt: z
         .string()
         .max(120, {
@@ -51,7 +52,7 @@ const VenueImages = () => {
   }, [append, fields.length]);
 
   const onSubmit = (values: z.infer<typeof VenueImagesSchema>) => {
-    setStoredForm({ ...storedForm, media: [values.media[0]] });
+    setStoredForm({ ...storedForm, media: values.media });
     setFormPhase('amenities');
     setFormIsDone('images');
   };
@@ -84,55 +85,65 @@ const VenueImages = () => {
 
         <Separator />
 
-        {fields.map((field, index) => (
-          <FormField
-            key={field.id}
-            control={form.control}
-            name={`media.${index}`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="sr-only">Image {index + 1}</FormLabel>
-                <FormControl>
-                  <div className="space-y-2">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {index + 1}
-                    </span>
-                    <Input
-                      value={field.value.url}
-                      name={`media.${index}.url`}
-                      placeholder="URL"
-                      type="text"
-                      onChange={(e) =>
-                        field.onChange({ ...field.value, url: e.target.value })
-                      }
-                    />
-                    <Input
-                      value={field.value.alt}
-                      name={`media.${index}.alt`}
-                      placeholder="Describe the image"
-                      type="text"
-                      onChange={(e) =>
-                        field.onChange({ ...field.value, alt: e.target.value })
-                      }
-                    />
-                    {index !== 0 && (
-                      <Button
-                        type="button"
-                        className="rounded-xl"
-                        variant="outline"
-                        size="icon"
-                        onClick={() => remove(index)}
-                      >
-                        <Trash size={16} />
-                      </Button>
-                    )}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
+        <ScrollArea className="h-72 w-full rounded-xl border">
+          <div className="space-y-4 p-4">
+            {fields.map((field, index) => (
+              <FormField
+                key={field.id}
+                control={form.control}
+                name={`media.${index}`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Image {index + 1}</FormLabel>
+                    <FormControl>
+                      <div className="space-y-2">
+                        <span className="text-sm font-medium text-muted-foreground">
+                          {index + 1}
+                        </span>
+                        <Input
+                          value={field.value.url}
+                          name={`media.${index}.url`}
+                          placeholder="URL"
+                          type="text"
+                          onChange={(e) =>
+                            field.onChange({
+                              ...field.value,
+                              url: e.target.value,
+                            })
+                          }
+                        />
+                        <Input
+                          value={field.value.alt}
+                          name={`media.${index}.alt`}
+                          placeholder="Describe the image"
+                          type="text"
+                          onChange={(e) =>
+                            field.onChange({
+                              ...field.value,
+                              alt: e.target.value,
+                            })
+                          }
+                        />
+                        {index !== 0 && (
+                          <Button
+                            type="button"
+                            className="rounded-xl"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => remove(index)}
+                          >
+                            <Trash size={16} />
+                          </Button>
+                        )}
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
+          </div>
+        </ScrollArea>
 
         <div className="flex justify-end gap-2">
           <Button

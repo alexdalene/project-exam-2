@@ -37,7 +37,7 @@ const AuthLoginSchema = z.object({
 });
 
 const AuthLogin = () => {
-  const { login, userLoading, userSuccess, user } = useStore();
+  const { login, userLoading, userSuccess, user, token } = useStore();
   const navigate = useNavigate();
   const location = useLocation() as { state: { email: string } };
   const { email } = location.state || '';
@@ -61,6 +61,12 @@ const AuthLogin = () => {
       navigate(`/profile/${user?.name}`);
     }
   }, [userSuccess, userLoading, isSent]);
+
+  useEffect(() => {
+    if (token) {
+      navigate(`/profile/${user?.name}`);
+    }
+  }, []);
 
   return (
     <Card className="max-w-[360px]">

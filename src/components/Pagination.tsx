@@ -11,10 +11,12 @@ import type { MetaType } from '@/types/response';
 import { useEffect } from 'react';
 import { useFilterState } from '@/hooks/useFilterState';
 import { useSearchParams } from 'react-router-dom';
+import useStore from '@/store/venueStore';
 
 const PaginationComponent = ({ meta }: { meta: MetaType }) => {
-  const { page, setFilterState } = useFilterState();
+  const { price, amenities, guests, page, setFilterState } = useFilterState();
   const [searchParams] = useSearchParams();
+  const { fetchAllVenues } = useStore();
 
   useEffect(() => {
     if (page !== meta.currentPage) {
@@ -25,6 +27,7 @@ const PaginationComponent = ({ meta }: { meta: MetaType }) => {
   const handlePageChange = (newPage: number | null) => {
     if (newPage !== null) {
       setFilterState({ page: newPage });
+      fetchAllVenues(newPage, { price, amenities, guests });
     }
   };
 

@@ -1,9 +1,10 @@
-import { Outlet, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import useStore from '@/store/venueStore';
 
 import ProfileUpdate from '@/components/profile/ProfileUpdate';
 import ProfileTabs from '@/components/profile/ProfileTabs';
+
+import { Outlet, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const Profile = () => {
   const { name } = useParams();
@@ -23,7 +24,7 @@ const Profile = () => {
   }, [name]);
 
   return (
-    <div className="mt-14 min-h-[calc(100svh-56px)]">
+    <div className="mx-auto mt-14 min-h-[calc(100svh-56px)] max-w-[1400px]">
       <div className="flex flex-col px-4 md:px-8 lg:flex-row lg:gap-16 lg:px-16 lg:pt-16">
         <div className="flex w-full max-w-[768px] flex-1 flex-col gap-8 pt-16 lg:pt-0">
           <div className="flex gap-2">

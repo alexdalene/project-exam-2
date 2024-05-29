@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import useStore from '@/store/venueStore';
 
-const VenueAmenitiesSchema = z.object({
+export const VenueAmenitiesSchema = z.object({
   meta: z.object({
     wifi: z.boolean(),
     parking: z.boolean(),

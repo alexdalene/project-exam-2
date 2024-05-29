@@ -19,18 +19,23 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
+import VenueEdit from '@/components/venue/VenueEdit';
+import VenueDelete from '@/components/venue/VenueDelete';
+import VenueBookings from '@/components/venue/VenueBookings';
+
 import {
   Dog,
   Minus,
   ParkingCircle,
   Plus,
+  Settings,
   Star,
   Stars,
   User,
   Utensils,
   Wifi,
 } from 'lucide-react';
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -51,7 +56,6 @@ const VenuesSingle = () => {
   const [isPopular, setIsPopular] = useState<boolean>(false);
   const [days, setDays] = useState<number>(1);
   const [guests, setGuests] = useState<number>(1);
-  const infoPopover = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -128,10 +132,7 @@ const VenuesSingle = () => {
   return (
     <div className="mb-24 mt-14">
       <div className="grid gap-8 md:grid-cols-2 md:gap-16 md:px-8 md:pt-16 lg:px-16">
-        <div
-          className="fixed bottom-0 left-0 z-50 h-fit w-full border-t border-black/5 bg-popover"
-          ref={infoPopover}
-        >
+        <div className="fixed bottom-0 left-0 z-50 h-fit w-full border-t border-black/5 bg-popover">
           <div className="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-4 md:px-8 lg:px-16">
             <div>
               {loading ? (
@@ -197,7 +198,7 @@ const VenuesSingle = () => {
                 </div>
               )}
 
-              {user ? (
+              {user && user.name !== venue?.owner.name ? (
                 <Button
                   size="lg"
                   className="rounded-xl"
@@ -205,6 +206,10 @@ const VenuesSingle = () => {
                   disabled={!bookingDateRange?.from || !bookingDateRange?.to}
                 >
                   Book
+                </Button>
+              ) : user?.name === venue?.owner.name ? (
+                <Button size="lg" className="rounded-xl" disabled>
+                  You own this venue
                 </Button>
               ) : (
                 <Button size="lg" className="rounded-xl" disabled>
@@ -226,7 +231,7 @@ const VenuesSingle = () => {
                     <img
                       src={media.url}
                       alt={media.alt}
-                      className="aspect-square h-full w-full object-cover md:rounded-xl"
+                      className="aspect-square h-full w-full border object-cover md:rounded-xl"
                     />
                   </CarouselItem>
                 ))}
@@ -238,6 +243,25 @@ const VenuesSingle = () => {
                 </>
               )}
             </Carousel>
+          )}
+
+          {user && user.name === venue?.owner.name && (
+            <div className="mt-4 w-full px-4 md:w-fit md:px-0">
+              <div className="rounded-xl border bg-background px-4 py-3">
+                <h2 className="flex items-center gap-2 text-sm font-medium">
+                  <Settings size={20} /> Manage
+                </h2>
+                <Separator className="my-4" />
+                <div>
+                  <VenueBookings />
+                </div>
+                <Separator className="my-4" />
+                <div className="flex flex-row-reverse gap-2">
+                  <VenueEdit venueId={venue.id} />
+                  <VenueDelete venueId={venue.id} />
+                </div>
+              </div>
+            </div>
           )}
         </div>
 
@@ -260,7 +284,7 @@ const VenuesSingle = () => {
             <Skeleton className="h-4 w-[200px]" />
           </div>
         ) : (
-          <div className="w-full px-4 md:px-0">
+          <div className="w-full overflow-hidden px-4 md:px-0">
             <h1 className="mb-1 text-2xl font-medium">{venue?.name}</h1>
 
             <div className="mt-4">
@@ -300,7 +324,10 @@ const VenuesSingle = () => {
 
             <div className="w-fit cursor-pointer">
               <HoverCard>
-                <HoverCardTrigger className="flex items-center gap-4">
+                <HoverCardTrigger
+                  className="flex items-center gap-4"
+                  onClick={() => navigate(`/profile/${venue?.owner.name}`)}
+                >
                   <div className="h-14 w-14 overflow-hidden rounded-full border border-border">
                     <img
                       src={venue?.owner.avatar.url}
@@ -309,9 +336,7 @@ const VenuesSingle = () => {
                     />
                   </div>
                   <div>
-                    <h2 className="font-medium hover:underline">
-                      {venue?.owner.name}
-                    </h2>
+                    <h2 className="font-medium">{venue?.owner.name}</h2>
                   </div>
                 </HoverCardTrigger>
                 <HoverCardContent>

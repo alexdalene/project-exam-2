@@ -16,7 +16,7 @@ import { LoaderCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-const VenueLocationSchema = z.object({
+export const VenueLocationSchema = z.object({
   country: z.string().min(3).max(50),
   city: z.string().min(3).max(50),
   address: z.string().min(3).max(50),

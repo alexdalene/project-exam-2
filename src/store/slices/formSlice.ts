@@ -6,7 +6,7 @@ export type FormSlice = {
     description: string;
     price: number | '' | undefined;
     maxGuests: number | '' | undefined;
-    media: [{ url: string; alt?: string | undefined }];
+    media: { url: string; alt?: string | undefined }[];
     meta: { [key: string]: boolean };
     location: {
       country: string;
@@ -14,6 +14,7 @@ export type FormSlice = {
       address: string;
       zip: string;
     };
+    rating?: number | undefined;
   };
   formPhase: string;
   setFormPhase: (phase: 'info' | 'images' | 'amenities' | 'location') => void;

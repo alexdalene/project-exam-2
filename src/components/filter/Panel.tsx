@@ -185,7 +185,7 @@ const Panel = ({ component }: { component: string }) => {
         )}
 
         {component === 'drawer' && (
-          <DrawerFooter>
+          <DrawerFooter className="px-0">
             <Button
               variant="outline"
               type="button"
